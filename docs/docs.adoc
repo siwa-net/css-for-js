@@ -4,6 +4,16 @@ Simon Wanner
 :toclevels: 3
 :icons: font
 :imagesdir: assets/images
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :info:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
 :doctype: book
 :experimental:
 :url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
@@ -117,7 +127,7 @@ image::margin-collapse-max.png[width=200,align=center]
 .Example
 [%collapsible]
 ====
-[source, html]
+[source,html]
 ----
 <header>
   <h1>My Project</h1>
@@ -126,6 +136,7 @@ image::margin-collapse-max.png[width=200,align=center]
   <p>Hello World</p>
 </section>
 ----
+
 [source,css]
 ----
 header {
