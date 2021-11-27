@@ -10,7 +10,7 @@ ifdef::env-github[]
 :outfilesuffix: .adoc
 :caution-caption: :fire:
 :important-caption: :exclamation:
-:note-caption: :circled-information-source:
+:note-caption: :blaze:
 :tip-caption: :bulb:
 :warning-caption: :warning:
 endif::[]
