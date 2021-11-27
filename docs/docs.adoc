@@ -12,7 +12,7 @@ Simon Wanner
 
 === Debugging
 
-[TIP]
+[WARNING]
 ====
 kbd:[Shift+Click] on colors in chrome dev-tools switches presentation mode (hex, rgb, hsl)
 
