@@ -1,0 +1,166 @@
+= CSS for JS - Summary
+Simon Wanner
+:toc:
+:toclevels: 3
+:icons: font
+:imagesdir: assets/images
+:doctype: book
+:experimental:
+:url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
+
+== Tips & Tricks
+
+=== Debugging
+
+[TIP]
+====
+kbd:[Shift+Click] on colors in chrome dev-tools switches presentation mode (hex, rgb, hsl)
+
+Commented out styles still appear in the browser's debugger to toggle
+====
+
+== Fundamentals Recap
+
+=== Accessibility (https://a11y.coffee/[a11y])
+
+[TIP]
+=====
+.Use `rem` for font-sizes and `px` for spacings
+[%collapsible]
+====
+_Assumption: Users scale for better readability of text-content +
+When scaling, `px` will remain (spacings) and `rem` will scale._
+====
+=====
+
+[IMPORTANT]
+=====
+.Don't use `outline: none` for styles
+[%collapsible]
+====
+_It prevents a proper tabbing_
+====
+
+.Placeholders should not contain critical information
+[%collapsible]
+====
+_Information will be gone as soon as user enters data._
+====
+
+.`<html>` tag should not receive a custom font-size
+[%collapsible]
+====
+_This will override a user's chosen default font size._
+====
+
+.`line-height: <number>` should be at least 1.5
+[%collapsible]
+====
+_The calculated value is:_ `element font size * value`
+====
+=====
+
+== Rendering
+
+[NOTE]
+=====
+Most of the https://www.sitepoint.com/css-inheritance-introduction/#list-css-properties-inherit[properties that inherit] are typography-related (color, font, line-height, …)
+
+https://wattenberger.com/blog/css-cascade[CSS specificity tutorial]
+=====
+
+=== Margins
+
+> Margin is like putting glue on something before you’ve decided what to stick it to, or if it should be stuck to anything.
+[NOTE]
+
+=====
+`margin-[top/bottom/left/right]` is influenced by left-to-right languages. +
+`margin-[block/inline]-[start/end]` Would be the correct alternative.
+
+Margins of parent & children collapse (<<margin-collapse, show more>>)
+
+Padding/Border/hr between vertical margins prevents collapsing
+
+.https://mxstbr.com/thoughts/margin/[Margin considered harmful]
+[%collapsible]
+====
+_By banning margin from all components you have to build more reusable and encapsulated components.
+Use a combination of padding and layout components instead_
+====
+
+`margin: auto` is still valid to center only selected children (compared to grid/flexbox center logic)
+=====
+
+[#margin-collapse]
+==== Margin Collapse
+
+TIP: Margins only collapse in flow layout
+
+* Only block direction margins (e.g, usually vertical margin) collapse
+* Only adjacent elements collapse
+** Blocked by padding, border, gaps, and elements between (e.g `<hr />` or `<br />`)
+
+image::margin-collapse-break.png[Line break prevents collapse,200,align="center"]
+
+===== Calculate effective margins
+
+* Margins can collapse in the same direction (the largest one wins)
+
+image::margin-collapse-max.png[width=200,align=center]
+
+* Multiple positive and negative margins are combined by
+** Find the largest positive margin
+** Find the largest negative margin
+** Add those two numbers together
+
+.Example
+[%collapsible]
+====
+[source, html]
+----
+<header>
+  <h1>My Project</h1>
+</header>
+<section>
+  <p>Hello World</p>
+</section>
+----
+[source,css]
+----
+header {
+  margin-bottom: -20px; // most negative value
+}
+
+header h1 {
+  margin-bottom: 10px;
+}
+
+section {
+  margin-top: -10px;
+}
+
+section p {
+  margin-top: 30px; // most positive value
+}
+
+/*
+effective margin
+=> Max(10px, 30px) + Min(-20px, -10px)
+=> 30px + (-20px)
+=> 10px
+*/
+----
+====
+
+=== Dimensions
+
+* `box-decoration-break: clone` handles multi-line inline element as separate segments -> spacings are applied to all segments.
+* `max-width: min-content` solves figure (caption) width issues
+
+NOTE: `width` takes the maximum space by default, `height` the minimum space
+
+
+
+
+

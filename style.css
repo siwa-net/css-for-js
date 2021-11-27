@@ -1,0 +1,9 @@
+body, html {
+    background-color: hsl(0, 0%, 98%);
+    min-height: 100%;
+}
+
+div {
+    background-color: hsla(0, 0%, 50%, .4);
+    height: 20px;
+}
