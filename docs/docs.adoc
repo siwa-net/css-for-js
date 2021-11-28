@@ -27,6 +27,8 @@ endif::[]
 kbd:[Shift+Click] on colors in chrome dev-tools switches presentation mode (hex, rgb, hsl)
 
 Commented out styles still appear in the browser's debugger to toggle
+
+https://github.com/andreadev-it/stacking-contexts-inspector[Stacking dev-tools]
 ====
 
 == Fundamentals Recap
@@ -171,7 +173,111 @@ effective margin
 
 NOTE: `width` takes the maximum space by default, `height` the minimum space
 
+=== Positioning
 
+* Flow layout isn't really built with layering in mind
 
+* If an element is currently using positioned layout, and you want to opt out, you can set position to either `static` or `initial`
 
+* If one sibling uses positioned layout, it will appear above its non-positioned sibling, no matter what the DOM order is.
 
+* Positioned layout adds additional CSS properties (e.g., `top, left, right, bottom`)
+* Difference to `margin`: These positions do not impact the layout +
+In terms of flow layout, the browser acts like the element is still in its original position.
+The displacement is purely cosmetic.
++
+image::position-comparison.png[align=center]
+* Can be applied to block and inline elements
+
+==== Absolute positioning
+
+* `position: absolute` is placed at its default in-flow position when no positioning is provided
+* Center elements
++
+[source,css]
+----
+.box {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+}
+----
++
+Alternative
++
+[source,css]
+----
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+}
+----
+* Containing element is the closest positioned ancestor
+
+==== Stacking content
+
+[NOTE]
+====
+`z-index` does not work in flow layouts (use positioned layout, flexbox or grid instead)
+
+Each `z-index` creates an isolated stacking context for its descendants.
+Wrapping content that stacks over others by accident into a stacking context can solve this issue.
+====
+
+[TIP]
+====
+Instead of creating a stacking context with `z-index`, modern browsers can use:
+
+[source,css]
+----
+.stacking-container {
+  isolation: isolate;
+}
+----
+====
+
+==== Fixed positioning
+* Sits at its flow position if no positioning is provided
+
+WARNING: If a parent or grandparent uses the transform property, it becomes the containing block for the fixed element, essentially transforming it into an absolutely-positioned element
+
+.Helper to detect ancestors that break `position: fixed`
+[%collapsible]
+====
+[source, javascript]
+----
+const selector = '.the-fixed-child';
+function findCulprits(elem) {
+  if (!elem) {
+    throw new Error(
+      'Could not find element with that selector'
+    );
+  }
+  let parent = elem.parentElement;
+  while (parent) {
+    const {
+      transform,
+      willChange
+    } = getComputedStyle(parent);
+    if (transform !== 'none' || willChange === 'transform') {
+      console.warn(
+        '🚨 Found a culprit! 🚨\n',
+        parent,
+        { transform, willChange }
+      );
+    }
+    parent = parent.parentElement;
+  }
+}
+findCulprits(document.querySelector(selector));
+----
+====
