@@ -246,6 +246,7 @@ Instead of creating a stacking context with `z-index`, modern browsers can use:
 ====
 
 ==== Fixed positioning
+* Can only be contained by the viewport. It doesn't care about containing blocks
 * Sits at its flow position if no positioning is provided
 
 WARNING: If a parent or grandparent uses the transform property, it becomes the containing block for the fixed element, essentially transforming it into an absolutely-positioned element
@@ -281,3 +282,19 @@ function findCulprits(elem) {
 findCulprits(document.querySelector(selector));
 ----
 ====
+
+==== Overflow
+WARNING: Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+
+When we set either overflow-x or overflow-y, we turn the selected element into a scroll container. Children of a scroll container are essentially locked inside that box.
+
+Essentially, `overflow: hidden` is an `overflow: scroll` container without the ability to scroll.
+
+Absolute positioned elements ignore overflow properties of their ancestor elements. `overflow: auto` on the containing element solves this issue by scrolling inside of the container.
+
+Fixed-position elements are immune from being hidden with `overflow: hidden`
+
+==== Sticky positioning
+When setting `position: sticky`, you also need to pick at least one edge to stick to (top, left, right, bottom). Most commonly, this is done with `top: 0px`
+
+Sticky elements take up real space, and that space remains taken even when the element is stuck to an edge during scrolling.

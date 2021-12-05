@@ -471,6 +471,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_absolute_positioning">Absolute positioning</a></li>
 <li><a href="#_stacking_content">Stacking content</a></li>
 <li><a href="#_fixed_positioning">Fixed positioning</a></li>
+<li><a href="#_overflow">Overflow</a></li>
+<li><a href="#_sticky_positioning">Sticky positioning</a></li>
 </ul>
 </li>
 </ul>
@@ -902,6 +904,9 @@ Wrapping content that stacks over others by accident into a stacking context can
 <div class="ulist">
 <ul>
 <li>
+<p>Can only be contained by the viewport. It doesn&#8217;t care about containing blocks</p>
+</li>
+<li>
 <p>Sits at its flow position if no positioning is provided</p>
 </li>
 </ul>
@@ -952,13 +957,49 @@ findCulprits(document.querySelector(selector));</code></pre>
 </div>
 </details>
 </div>
+<div class="sect3">
+<h4 id="_overflow">Overflow</h4>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When we set either overflow-x or overflow-y, we turn the selected element into a scroll container. Children of a scroll container are essentially locked inside that box.</p>
+</div>
+<div class="paragraph">
+<p>Essentially, <code>overflow: hidden</code> is an <code>overflow: scroll</code> container without the ability to scroll.</p>
+</div>
+<div class="paragraph">
+<p>Absolute positioned elements ignore overflow properties of their ancestor elements. <code>overflow: auto</code> on the containing element solves this issue by scrolling inside of the container.</p>
+</div>
+<div class="paragraph">
+<p>Fixed-position elements are immune from being hidden with <code>overflow: hidden</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sticky_positioning">Sticky positioning</h4>
+<div class="paragraph">
+<p>When setting <code>position: sticky</code>, you also need to pick at least one edge to stick to (top, left, right, bottom). Most commonly, this is done with <code>top: 0px</code></p>
+</div>
+<div class="paragraph">
+<p>Sticky elements take up real space, and that space remains taken even when the element is stuck to an edge during scrolling.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-28 21:34:53 +0100
+Last updated 2021-12-02 22:34:44 +0100
 </div>
 </div>
 </body>
