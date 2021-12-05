@@ -229,6 +229,8 @@ Alternative
 ====
 `z-index` does not work in flow layouts (use positioned layout, flexbox or grid instead)
 
+Positioned elements will always render on top of non-positioned ones
+
 Each `z-index` creates an isolated stacking context for its descendants.
 Wrapping content that stacks over others by accident into a stacking context can solve this issue.
 ====
