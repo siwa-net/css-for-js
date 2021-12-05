@@ -466,6 +466,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_dimensions">Dimensions</a></li>
+<li><a href="#_positioning">Positioning</a>
+<ul class="sectlevel3">
+<li><a href="#_absolute_positioning">Absolute positioning</a></li>
+<li><a href="#_stacking_content">Stacking content</a></li>
+<li><a href="#_fixed_positioning">Fixed positioning</a></li>
+<li><a href="#_overflow">Overflow</a></li>
+<li><a href="#_sticky_positioning">Sticky positioning</a></li>
+<li><a href="#_hidden_content">Hidden Content</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -489,6 +499,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p>Commented out styles still appear in the browser&#8217;s debugger to toggle</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/andreadev-it/stacking-contexts-inspector">Stacking dev-tools</a></p>
 </div>
 </td>
 </tr>
@@ -769,12 +782,374 @@ effective margin
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_positioning">Positioning</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Flow layout isn&#8217;t really built with layering in mind</p>
+</li>
+<li>
+<p>If an element is currently using positioned layout, and you want to opt out, you can set position to either <code>static</code> or <code>initial</code></p>
+</li>
+<li>
+<p>If one sibling uses positioned layout, it will appear above its non-positioned sibling, no matter what the DOM order is.</p>
+</li>
+<li>
+<p>Positioned layout adds additional CSS properties (e.g., <code>top, left, right, bottom</code>)</p>
+</li>
+<li>
+<p>Difference to <code>margin</code>: These positions do not impact the layout<br>
+In terms of flow layout, the browser acts like the element is still in its original position.
+The displacement is purely cosmetic.</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/position-comparison.png" alt="position comparison">
+</div>
+</div>
+</li>
+<li>
+<p>Can be applied to block and inline elements</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_absolute_positioning">Absolute positioning</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>position: absolute</code> is placed at its default in-flow position when no positioning is provided</p>
+</li>
+<li>
+<p>Center elements</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.box</span> {
+  <span style="color:#606">position</span>: <span style="color:#088">absolute</span>;
+  <span style="color:#606">top</span>: <span style="color:#60E">0px</span>;
+  <span style="color:#606">left</span>: <span style="color:#60E">0px</span>;
+  <span style="color:#606">right</span>: <span style="color:#60E">0px</span>;
+  <span style="color:#606">bottom</span>: <span style="color:#60E">0px</span>;
+  <span style="color:#606">width</span>: <span style="color:#60E">100px</span>;
+  <span style="color:#606">height</span>: <span style="color:#60E">100px</span>;
+  <span style="color:#606">margin</span>: <span style="color:#088">auto</span>;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternative</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.box</span> {
+  <span style="color:#606">position</span>: <span style="color:#088">absolute</span>;
+  <span style="color:#606">top</span>: <span style="color:#60E">50%</span>;
+  <span style="color:#606">left</span>: <span style="color:#60E">50%</span>;
+  <span style="color:#606">transform</span>: <span style="color:#F00;background-color:#FAA">t</span><span style="color:#F00;background-color:#FAA">r</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">s</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">t</span><span style="color:#F00;background-color:#FAA">e</span>(<span style="color:#60E">-50%</span>, <span style="color:#60E">-50%</span>);
+  <span style="color:#606">width</span>: <span style="color:#60E">100px</span>;
+  <span style="color:#606">height</span>: <span style="color:#60E">100px</span>;
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Containing element is the closest positioned ancestor</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_stacking_content">Stacking content</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>z-index</code> does not work in flow layouts (use positioned layout, flexbox or grid instead)</p>
+</div>
+<div class="paragraph">
+<p>Positioned elements will always render on top of non-positioned ones</p>
+</div>
+<div class="paragraph">
+<p>Each <code>z-index</code> creates an isolated stacking context for its descendants.
+Wrapping content that stacks over others by accident into a stacking context can solve this issue.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Instead of creating a stacking context with <code>z-index</code>, modern browsers can use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.stacking-container</span> {
+  <span style="color:#606">isolation</span>: <span style="color:#088">isolate</span>;
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fixed_positioning">Fixed positioning</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Can only be contained by the viewport. It doesn&#8217;t care about containing blocks</p>
+</li>
+<li>
+<p>Sits at its flow position if no positioning is provided</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If a parent or grandparent uses the transform property, it becomes the containing block for the fixed element, essentially transforming it into an absolutely-positioned element
+</td>
+</tr>
+</table>
+</div>
+<details>
+<summary class="title">Helper to detect ancestors that break <code>position: fixed</code></summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">.the-fixed-child</span><span style="color:#710">'</span></span>;
+<span style="color:#080;font-weight:bold">function</span> <span style="color:#06B;font-weight:bold">findCulprits</span>(elem) {
+  <span style="color:#080;font-weight:bold">if</span> (!elem) {
+    <span style="color:#080;font-weight:bold">throw</span> <span style="color:#080;font-weight:bold">new</span> Error(
+      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Could not find element with that selector</span><span style="color:#710">'</span></span>
+    );
+  }
+  let parent = elem.parentElement;
+  <span style="color:#080;font-weight:bold">while</span> (parent) {
+    const {
+      transform,
+      willChange
+    } = getComputedStyle(parent);
+    <span style="color:#080;font-weight:bold">if</span> (transform !== <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">none</span><span style="color:#710">'</span></span> || willChange === <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">transform</span><span style="color:#710">'</span></span>) {
+      console.warn(
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">🚨 Found a culprit! 🚨</span><span style="color:#D20">\n</span><span style="color:#710">'</span></span>,
+        parent,
+        { transform, willChange }
+      );
+    }
+    parent = parent.parentElement;
+  }
+}
+findCulprits(document.querySelector(selector));</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect3">
+<h4 id="_overflow">Overflow</h4>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When we set either overflow-x or overflow-y, we turn the selected element into a scroll container. Children of a scroll container are essentially locked inside that box.</p>
+</div>
+<div class="paragraph">
+<p>Essentially, <code>overflow: hidden</code> is an <code>overflow: scroll</code> container without the ability to scroll.</p>
+</div>
+<div class="paragraph">
+<p>Absolute positioned elements ignore overflow properties of their ancestor elements. <code>overflow: auto</code> on the containing element solves this issue by scrolling inside of the container.</p>
+</div>
+<div class="paragraph">
+<p>Fixed-position elements are immune from being hidden with <code>overflow: hidden</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sticky_positioning">Sticky positioning</h4>
+<div class="paragraph">
+<p>When setting <code>position: sticky</code>, you also need to pick at least one edge to stick to (top, left, right, bottom). Most commonly, this is done with <code>top: 0px</code></p>
+</div>
+<div class="paragraph">
+<p>Sticky elements take up real space, and that space remains taken even when the element is stuck to an edge during scrolling.</p>
+</div>
+<div class="sect4">
+<h5 id="_troubleshooting">Troubleshooting</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>A parent is hiding/managing overflow</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>position: sticky</code> can only stick in one "context". Either it sticks to the main viewport scroll, or it sticks to an ancestor that manages overflow.</p>
+</li>
+<li>
+<p>Overflow <code>hidden</code> or <code>scroll</code> or <code>auto</code> sticks element in that context, not in the broader page context. <strong>Check ancestors for this styling as well</strong></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<details>
+<summary class="title">Helper to detect ancestors that break <code>position: sticky</code> by some overflow styling</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span style="color:#777">// Replace this with a relevant selector.</span>
+const selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">.the-fixed-child</span><span style="color:#710">'</span></span>;
+
+<span style="color:#080;font-weight:bold">function</span> <span style="color:#06B;font-weight:bold">findCulprits</span>(elem) {
+  <span style="color:#080;font-weight:bold">if</span> (!elem) {
+    <span style="color:#080;font-weight:bold">throw</span> <span style="color:#080;font-weight:bold">new</span> Error(
+      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Could not find element with that selector</span><span style="color:#710">'</span></span>
+    );
+  }
+
+  let parent = elem.parentElement;
+
+  <span style="color:#080;font-weight:bold">while</span> (parent) {
+    const hasOverflow = getComputedStyle(parent).overflow;
+    <span style="color:#080;font-weight:bold">if</span> (hasOverflow !== <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">visible</span><span style="color:#710">'</span></span>) {
+      console.log(hasOverflow, parent);
+    }
+    parent = parent.parentElement;
+  }
+}
+
+findCulprits(document.querySelector(selector));</code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="ulist">
+<ul>
+<li>
+<p>The sticky element is stretched in flexbox/grid layout</p>
+</li>
+<li>
+<p>Thin gap above my sticky header</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Issue in Chrome due to rounding issues</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">header</span> {
+  <span style="color:#606">position</span>: <span style="color:#088">sticky</span>;
+  <span style="color:#606">top</span>: <span style="color:#60E">-1px</span>; <span style="color:#777">/* -1px instead of 0px */</span>
+}</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_hidden_content">Hidden Content</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>visibility: hidden</code> can be selectively undone by children.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>All children take the space they need, but only selected ones are visible in the browser.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<details>
+<summary class="title">React snipped to show hidden a11y elements when necessary (alternative to <code>aria-label</code>)</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span style="color:#080;font-weight:bold">import</span> React from <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">reactjs</span><span style="color:#710">'</span></span>;
+const hiddenStyles = {
+  <span style="color:#606">display</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">inline-block</span><span style="color:#710">'</span></span>,
+  <span style="color:#606">position</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">absolute</span><span style="color:#710">'</span></span>,
+  <span style="color:#606">overflow</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hidden</span><span style="color:#710">'</span></span>,
+  <span style="color:#606">clip</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">rect(0 0 0 0)</span><span style="color:#710">'</span></span>,
+  <span style="color:#606">height</span>: <span style="color:#00D">1</span>,
+  <span style="color:#606">width</span>: <span style="color:#00D">1</span>,
+  <span style="color:#606">margin</span>: -<span style="color:#00D">1</span>,
+  <span style="color:#606">padding</span>: <span style="color:#00D">0</span>,
+  <span style="color:#606">border</span>: <span style="color:#00D">0</span>,
+};
+const VisuallyHidden = ({ children, ...delegated }) =&gt; {
+  const [forceShow, setForceShow] = React.useState(<span style="color:#069">false</span>);
+  React.useEffect(() =&gt; {
+    <span style="color:#080;font-weight:bold">if</span> (process.env.NODE_ENV !== <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>) {
+      const handleKeyDown = (ev) =&gt; {
+        <span style="color:#080;font-weight:bold">if</span> (ev.key === <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Alt</span><span style="color:#710">'</span></span>) {
+          setForceShow(<span style="color:#069">true</span>);
+        }
+      };
+      const handleKeyUp = (ev) =&gt; {
+        <span style="color:#080;font-weight:bold">if</span> (ev.key === <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Alt</span><span style="color:#710">'</span></span>) {
+          setForceShow(<span style="color:#069">false</span>);
+        }
+      };
+      window.addEventListener(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">keydown</span><span style="color:#710">'</span></span>, handleKeyDown);
+      window.addEventListener(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">keyup</span><span style="color:#710">'</span></span>, handleKeyUp);
+      <span style="color:#080;font-weight:bold">return</span> () =&gt; {
+        window.removeEventListener(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">keydown</span><span style="color:#710">'</span></span>, handleKeyDown);
+        window.removeEventListener(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">keyup</span><span style="color:#710">'</span></span>, handleKeyUp);
+      };
+    }
+  }, []);
+  <span style="color:#080;font-weight:bold">if</span> (forceShow) {
+    <span style="color:#080;font-weight:bold">return</span> children;
+  }
+  <span style="color:#080;font-weight:bold">return</span> (
+    <span style="color:#070;font-weight:bold">&lt;span</span> <span style="color:#b48">style</span>=<span style="color:#F00;background-color:#FAA">{</span><span style="color:#700">hiddenStyles</span><span style="color:#F00;background-color:#FAA">}</span> <span style="color:#F00;background-color:#FAA">{</span><span style="color:#b48">...delegated</span><span style="color:#F00;background-color:#FAA">}</span><span style="color:#070;font-weight:bold">&gt;</span>
+      {children}
+    <span style="color:#070;font-weight:bold">&lt;/span&gt;</span>
+  );
+};
+<span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">default</span> VisuallyHidden;</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-27 15:26:07 +0100
+Last updated 2021-12-05 14:05:24 +0100
 </div>
 </div>
 </body>
