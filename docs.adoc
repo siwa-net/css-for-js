@@ -622,6 +622,11 @@ image::flex-distributions.jpeg[align=center,width=450]
 ====
 
 * In a flex row, `flex-basis` works just like `width`, and it also respects the constraints set by `min-width` and `max-width`
+* `flex-basis` helps to define the element-width base on which growing/shrinking the element should take place
++
+.Example
+ flex-basis: 250px -> Assume the element had a width of 250px by default. Resizing logic is based on this width.
+Combining elements flex-basis to a certain screen width can trigger resized effects as desired.
 
 === Item vs. content
 
