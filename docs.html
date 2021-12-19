@@ -1610,6 +1610,16 @@ If all the items are below their minimum content size, this property has no effe
 <li>
 <p>In a flex row, <code>flex-basis</code> works just like <code>width</code>, and it also respects the constraints set by <code>min-width</code> and <code>max-width</code></p>
 </li>
+<li>
+<p><code>flex-basis</code> helps to define the element-width base on which growing/shrinking the element should take place</p>
+<div class="literalblock">
+<div class="title">Example</div>
+<div class="content">
+<pre> flex-basis: 250px -&gt; Assume the element had a width of 250px by default. Resizing logic is based on this width.
+Combining elements flex-basis to a certain screen width can trigger resized effects as desired.</pre>
+</div>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -1649,7 +1659,7 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-19 17:01:32 +0100
+Last updated 2021-12-19 21:37:50 +0100
 </div>
 </div>
 </body>
