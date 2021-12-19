@@ -54,7 +54,7 @@ html, body {
 
 Applying scroll effect only to one part of the application by defining the scroll container height by sibling: (See https://courses.joshwcomeau.com/css-for-js/04-flexbox/11-flex-interactions#combining-layout-modes[Module 4])
 
-video::assets/videos/flex-absolute-child.mp4[align=center,width=400]
+video::https://courses.joshwcomeau.com/course-materials/flex-absolute-child.mp4[align=center,width=400]
 
 [source,css]
 ----
