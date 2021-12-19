@@ -451,6 +451,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_tips_tricks">Tips &amp; Tricks</a>
 <ul class="sectlevel2">
 <li><a href="#_debugging">Debugging</a></li>
+<li><a href="#_mobile_styles">Mobile Styles</a>
+<ul class="sectlevel3">
+<li><a href="#_scroll_effects">Scroll Effects</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_fundamentals_recap">Fundamentals Recap</a>
@@ -476,6 +481,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_hidden_content">Hidden Content</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#_modern_component_architecture">Modern Component Architecture</a>
+<ul class="sectlevel2">
+<li><a href="#_ways_of_styling_applications">Ways of styling applications</a>
+<ul class="sectlevel3">
+<li><a href="#_vanilla_css">Vanilla CSS</a></li>
+<li><a href="#_sass_less">Sass / Less</a></li>
+<li><a href="#_css_modules">CSS Modules</a></li>
+<li><a href="#_single_file_components">Single-file components</a></li>
+<li><a href="#_styled_components">Styled components</a></li>
+<li><a href="#_tailwind_utility_first_frameworks">Tailwind (Utility first frameworks)</a></li>
+</ul>
+</li>
+<li><a href="#_styled_components_in_depth">Styled Components - In Depth</a></li>
+</ul>
+</li>
+<li><a href="#_flexbox">Flexbox</a>
+<ul class="sectlevel2">
+<li><a href="#_basic_behaviour">Basic Behaviour</a></li>
+<li><a href="#_item_vs_content">Item vs. content</a></li>
+<li><a href="#_flexbox_and_z_index">Flexbox and z-index</a></li>
 </ul>
 </li>
 </ul>
@@ -506,6 +533,69 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mobile_styles">Mobile Styles</h3>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Apllying full screen height with <code>100vh</code> causes unexpected behavour on mobile devices, as loading bars and scroll bars count into the <code>vh</code> as well.</p>
+</div>
+<div class="listingblock">
+<div class="title">Solution:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">html</span>, <span style="color:#070;font-weight:bold">body</span> {
+  <span style="color:#606">height</span>: <span style="color:#60E">100%</span>;
+}
+
+<span style="color:#B06;font-weight:bold">.full-height-container</span> {
+  <span style="color:#606">min-height</span>: <span style="color:#60E">100%</span>; <span style="color:#777">/* Takes full height of its parent's height */</span>
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_scroll_effects">Scroll Effects</h4>
+<div class="paragraph">
+<p>Applying scroll effect only to one part of the application by defining the scroll container height by sibling: (See <a href="https://courses.joshwcomeau.com/css-for-js/04-flexbox/11-flex-interactions#combining-layout-modes">Module 4</a>)</p>
+</div>
+<div class="videoblock text-center">
+<div class="content">
+<video src="https://courses.joshwcomeau.com/course-materials/flex-absolute-child.mp4" width="400" controls>
+Your browser does not support the video tag.
+</video>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.outer-container</span> {
+    <span style="color:#777">/* align items next to each other + define height by children */</span>
+    <span style="color:#606">display</span>: <span style="color:#088">flex</span>;
+    <span style="color:#777">/* handle scroll effect for scrolling-element */</span>
+    <span style="color:#606">overflow</span>: <span style="color:#088">auto</span>;
+}
+
+<span style="color:#B06;font-weight:bold">.scrolling-element</span> {
+    <span style="color:#777">/* all content overflows -&gt; height of parent not affected by this element */</span>
+    <span style="color:#606">height</span>: <span style="color:#60E">0</span>;
+}
+
+<span style="color:#B06;font-weight:bold">.main-content</span> {
+    <span style="color:#777">/* appears to be static as it defines the containers height + sticks while scrolling */</span>
+    <span style="color:#606">position</span>: <span style="color:#088">sticky</span>;
+    <span style="color:#606">top</span>: <span style="color:#60E">0</span>;
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -908,7 +998,8 @@ Wrapping content that stacks over others by accident into a stacking context can
 <div class="ulist">
 <ul>
 <li>
-<p>Can only be contained by the viewport. It doesn&#8217;t care about containing blocks</p>
+<p>Can only be contained by the viewport.
+It doesn&#8217;t care about containing blocks</p>
 </li>
 <li>
 <p>Sits at its flow position if no positioning is provided</p>
@@ -976,7 +1067,8 @@ Scrollbars can look diferent on macOS based on having a wired mouse connected or
 </table>
 </div>
 <div class="paragraph">
-<p>When we set either overflow-x or overflow-y, we turn the selected element into a scroll container. Children of a scroll container are essentially locked inside that box.</p>
+<p>When we set either overflow-x or overflow-y, we turn the selected element into a scroll container.
+Children of a scroll container are essentially locked inside that box.</p>
 </div>
 <div class="paragraph">
 <p>Essentially, <code>overflow: hidden</code> is an <code>overflow: scroll</code> container without the ability to scroll.</p>
@@ -991,7 +1083,8 @@ Scrollbars can look diferent on macOS based on having a wired mouse connected or
 <div class="sect3">
 <h4 id="_sticky_positioning">Sticky positioning</h4>
 <div class="paragraph">
-<p>When setting <code>position: sticky</code>, you also need to pick at least one edge to stick to (top, left, right, bottom). Most commonly, this is done with <code>top: 0px</code></p>
+<p>When setting <code>position: sticky</code>, you also need to pick at least one edge to stick to (top, left, right, bottom).
+Most commonly, this is done with <code>top: 0px</code></p>
 </div>
 <div class="paragraph">
 <p>Sticky elements take up real space, and that space remains taken even when the element is stuck to an edge during scrolling.</p>
@@ -1005,7 +1098,8 @@ Scrollbars can look diferent on macOS based on having a wired mouse connected or
 <div class="ulist">
 <ul>
 <li>
-<p><code>position: sticky</code> can only stick in one "context". Either it sticks to the main viewport scroll, or it sticks to an ancestor that manages overflow.</p>
+<p><code>position: sticky</code> can only stick in one "context".
+Either it sticks to the main viewport scroll, or it sticks to an ancestor that manages overflow.</p>
 </li>
 <li>
 <p>Overflow <code>hidden</code> or <code>scroll</code> or <code>auto</code> sticks element in that context, not in the broader page context. <strong>Check ancestors for this styling as well</strong></p>
@@ -1146,10 +1240,416 @@ const VisuallyHidden = ({ children, ...delegated }) =&gt; {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_modern_component_architecture">Modern Component Architecture</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ways_of_styling_applications">Ways of styling applications</h3>
+<div class="paragraph">
+<p>There are multiple ways of adding CSS to an application:</p>
+</div>
+<div class="sect3">
+<h4 id="_vanilla_css">Vanilla CSS</h4>
+<div class="ulist">
+<div class="title">Pros</div>
+<ul>
+<li>
+<p>No tooling means less complexity, no runtime performance costs</p>
+</li>
+<li>
+<p>CSS Custom Properties make certain tooling features redundant</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Cons</div>
+<ul>
+<li>
+<p>Global and unscoped</p>
+</li>
+<li>
+<p>No vendor prefixes added</p>
+</li>
+<li>
+<p>(<em>Can&#8217;t share data between js and css</em> 🤔)</p>
+<details>
+<summary class="title">Caveat</summary>
+<div class="content">
+<div class="paragraph">
+<p>Having a separation between application logic and styles in mind, passing data between js and css can lead to moving parts of the displaying logic into styled components rather than applying different styled components for different use cases.
+Although this has no impact on the processed styles, the complexity and readability of the mixture between data and CSS might increase tremendously.</p>
+</div>
+</div>
+</details>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sass_less">Sass / Less</h4>
+<div class="ulist">
+<div class="title">Pros</div>
+<ul>
+<li>
+<p>Powerful tools like for-loops, mixins, and nesting</p>
+</li>
+<li>
+<p>High developer satisfaction compared with vanilla CSS</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Cons</div>
+<ul>
+<li>
+<p>Requires a build step</p>
+</li>
+<li>
+<p>Remains global by nature, and isn&#8217;t scoped to specific components</p>
+</li>
+<li>
+<p>Everything happens at build time</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_css_modules">CSS Modules</h4>
+<div class="ulist">
+<div class="title">Pros</div>
+<ul>
+<li>
+<p>Solves scoping and specificity</p>
+</li>
+<li>
+<p>Feels like writing straight-up CSS</p>
+</li>
+<li>
+<p>Offers a composes feature, to extend existing CSS classes</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Cons</div>
+<ul>
+<li>
+<p>Doesn&#8217;t really offer any modern convenience features, like auto prefixing (post processors needed to fix this)</p>
+</li>
+<li>
+<p>(<em>Hard to share data between CSS and JS</em> - <a href="#js-in-css">see Vanilla CSS cons</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_single_file_components">Single-file components</h4>
+<div class="ulist">
+<div class="title">Pros</div>
+<ul>
+<li>
+<p>Less jumping between files</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Cons</div>
+<ul>
+<li>
+<p>Blows up files</p>
+</li>
+<li>
+<p>No file-based separation of styles &amp; logic</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_styled_components">Styled components</h4>
+<div class="ulist">
+<div class="title">Pros</div>
+<ul>
+<li>
+<p>Solves scoping and specificity</p>
+</li>
+<li>
+<p>Offers good solutions for animations and global styles</p>
+</li>
+<li>
+<p>Extremely high developer satisfaction</p>
+</li>
+<li>
+<p>Best-in-class performance</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Cons</div>
+<ul>
+<li>
+<p>Primarily a React tool</p>
+</li>
+<li>
+<p>Obfuscates the underlying markup tags, which can make it harder to get a sense of the HTML semantics at a glance</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tailwind_utility_first_frameworks">Tailwind (Utility first frameworks)</h4>
+<div class="ulist">
+<div class="title">Pros</div>
+<ul>
+<li>
+<p>Solves scoping and specificity</p>
+</li>
+<li>
+<p>Encourages good habits when it comes to following a design system</p>
+</li>
+<li>
+<p>Can be faster to write</p>
+</li>
+<li>
+<p>Not React-specific (React based alternative: <a href="https://github.com/ben-rogerson/twin.macro">Twin</a>)</p>
+</li>
+<li>
+<p>Highly used in the last few years</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Cons</div>
+<ul>
+<li>
+<p>Relatively steep learning curve, compared to other tools</p>
+</li>
+<li>
+<p>Adds a lot of "bulk" to your markup</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_styled_components_in_depth">Styled Components - In Depth</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Sass-like preprocessor <strong>stylis</strong> adds vendor prefixes behind the scenes.</p>
+</li>
+<li>
+<p>Creates unique hash for each styled component &#8594; no css class collisions</p>
+</li>
+<li>
+<p><a href="https://www.joshwcomeau.com/react/demystifying-styled-components/">Demistifying Styled Components</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Nested CSS (<code>&amp;</code>) might come to <a href="https://drafts.csswg.org/css-nesting-1/">Vanilla CSS</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://necolas.github.io/react-native-web/benchmarks/">Styling Variants Benchmarks</a></p>
+</li>
+<li>
+<p><strong>Each added prop carries a significant and exponential cost in terms of complexity</strong></p>
+</li>
+<li>
+<p>Use compositions for variants that feel like not being generic ones</p>
+</li>
+<li>
+<p>Define contextual styles by "reaching out" to the sourrounding context</p>
+<details>
+<summary class="title">Details</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="typescript jsx">const ButtonBase = styled.button`
+  border-radius: 2px;
+
+  ${ButtonGroup} &amp; {
+    border-radius: 0px;
+  }
+`;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Contextual styles are defined next to the element to be styled (ButtonBase), rather than polluting the styled of the context (i.e., ButtonGroup)</em></p>
+</div>
+</div>
+</details>
+</li>
+<li>
+<p>When extending JSX-Components with a styled component, <code>className</code> has to be passed as a prop to the JSX-Component in order to apply the generated css class to its root-element</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Only provide "core" options as props for styled components.
+Too much options increase complexity dramatically.
+</td>
+</tr>
+</table>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">How to decide about "core" options?</div>
+<div class="paragraph">
+<p>If the Button component starts to feel too overwhelming, with too many options, consider extracting a couple composed variants to lighten the mental load.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flexbox">Flexbox</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://flexboxfroggy.com/">Flexbox Frog Game</a></p>
+</div>
+<div class="sect2">
+<h3 id="_basic_behaviour">Basic Behaviour</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>primary &amp; cross axis</p>
+<div class="ulist">
+<ul>
+<li>
+<p>justify-content styles primary axis</p>
+</li>
+<li>
+<p>align-items styles secondary axis</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>width/height are more like hypothetical rules rather than strict styling</p>
+</li>
+<li>
+<p>Setting <code>width</code> in a flex row (or <code>height</code> in a flex column) sets the hypothetical size.
+It isn&#8217;t a guarantee, it&#8217;s a suggestion</p>
+</li>
+<li>
+<p><code>flex-basis</code> has the same effect as <code>width</code> in a flex row (height in a column).
+You can use them interchangeably, <strong>but <code>flex-basis</code> will win if there&#8217;s a conflict</strong></p>
+</li>
+<li>
+<p><code>flex: 1</code> will assign <code>flex-grow: 1</code>, but it will also set <code>flex-basis: 0%</code>.
+It won&#8217;t affect the default value for <code>flex-shrink</code>, which is 1</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>flex: shrink</code> can&#8217;t shrink an item below its minimum content size.
+If all the items are below their minimum content size, this property has no effect</p>
+</div>
+<div class="paragraph">
+<p>To avoid issues between <code>flex</code> and <code>width</code> it is recommended to use the shorthand for flex in order to set the flex-basis explicitly:</p>
+</div>
+<div class="listingblock">
+<div class="title">flex shorthand</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.item</span> {
+<span style="color:#777">/* grow | shrink | basis */</span>
+  <span style="color:#606">flex</span>: <span style="color:#60E">1</span> <span style="color:#60E">1</span> <span style="color:#60E">200px</span>;
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Since flex-basis is a synonym for width in a flex row, we&#8217;re effectively shrinking each child to have a “hypothetical width” of 0px, and then distributing all of the space between each child</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/flex-distributions.jpeg" alt="flex distributions" width="450">
+</div>
+<div class="title">Figure 1. <code>flex-basis:0</code> causes growth to distribute all space evenly on elements (based on their ratio)</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In a flex row, <code>flex-basis</code> works just like <code>width</code>, and it also respects the constraints set by <code>min-width</code> and <code>max-width</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_item_vs_content">Item vs. content</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single element within flexbox container</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group of items of a flexbox container</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_flexbox_and_z_index">Flexbox and z-index</h3>
+<div class="paragraph">
+<p>Flexbox algorithm also supports z-index.
+If our element is being laid out with Flexbox, it uses z-index as if it was rendered with positioned layout.</p>
+</div>
+<div class="paragraph">
+<p>The same thing is true for CSS Grid; a child in Grid layout can use z-index without setting <code>position: relative</code>.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-05 14:05:24 +0100
+Last updated 2021-12-19 17:01:32 +0100
 </div>
 </div>
 </body>

@@ -31,6 +31,52 @@ Commented out styles still appear in the browser's debugger to toggle
 https://github.com/andreadev-it/stacking-contexts-inspector[Stacking dev-tools]
 ====
 
+=== Mobile Styles
+
+[TIP]
+====
+Apllying full screen height with `100vh` causes unexpected behavour on mobile devices, as loading bars and scroll bars count into the `vh` as well.
+
+.Solution:
+[source,css]
+----
+html, body {
+  height: 100%;
+}
+
+.full-height-container {
+  min-height: 100%; /* Takes full height of its parent's height */
+}
+----
+====
+
+==== Scroll Effects
+
+Applying scroll effect only to one part of the application by defining the scroll container height by sibling: (See https://courses.joshwcomeau.com/css-for-js/04-flexbox/11-flex-interactions#combining-layout-modes[Module 4])
+
+video::https://courses.joshwcomeau.com/course-materials/flex-absolute-child.mp4[align=center,width=400]
+
+[source,css]
+----
+.outer-container {
+    /* align items next to each other + define height by children */
+    display: flex;
+    /* handle scroll effect for scrolling-element */
+    overflow: auto;
+}
+
+.scrolling-element {
+    /* all content overflows -> height of parent not affected by this element */
+    height: 0;
+}
+
+.main-content {
+    /* appears to be static as it defines the containers height + sticks while scrolling */
+    position: sticky;
+    top: 0;
+}
+----
+
 == Fundamentals Recap
 
 === Accessibility (https://a11y.coffee/[a11y])
@@ -248,7 +294,9 @@ Instead of creating a stacking context with `z-index`, modern browsers can use:
 ====
 
 ==== Fixed positioning
-* Can only be contained by the viewport. It doesn't care about containing blocks
+
+* Can only be contained by the viewport.
+It doesn't care about containing blocks
 * Sits at its flow position if no positioning is provided
 
 WARNING: If a parent or grandparent uses the transform property, it becomes the containing block for the fixed element, essentially transforming it into an absolutely-positioned element
@@ -256,7 +304,7 @@ WARNING: If a parent or grandparent uses the transform property, it becomes the 
 .Helper to detect ancestors that break `position: fixed`
 [%collapsible]
 ====
-[source, javascript]
+[source,javascript]
 ----
 const selector = '.the-fixed-child';
 function findCulprits(elem) {
@@ -286,9 +334,11 @@ findCulprits(document.querySelector(selector));
 ====
 
 ==== Overflow
+
 WARNING: Scrollbars can look diferent on macOS based on having a wired mouse connected or not
 
-When we set either overflow-x or overflow-y, we turn the selected element into a scroll container. Children of a scroll container are essentially locked inside that box.
+When we set either overflow-x or overflow-y, we turn the selected element into a scroll container.
+Children of a scroll container are essentially locked inside that box.
 
 Essentially, `overflow: hidden` is an `overflow: scroll` container without the ability to scroll.
 
@@ -297,19 +347,23 @@ Absolute positioned elements ignore overflow properties of their ancestor elemen
 Fixed-position elements are immune from being hidden with `overflow: hidden`
 
 ==== Sticky positioning
-When setting `position: sticky`, you also need to pick at least one edge to stick to (top, left, right, bottom). Most commonly, this is done with `top: 0px`
+
+When setting `position: sticky`, you also need to pick at least one edge to stick to (top, left, right, bottom).
+Most commonly, this is done with `top: 0px`
 
 Sticky elements take up real space, and that space remains taken even when the element is stuck to an edge during scrolling.
 
 ===== Troubleshooting
+
 * A parent is hiding/managing overflow
-**  `position: sticky` can only stick in one "context". Either it sticks to the main viewport scroll, or it sticks to an ancestor that manages overflow.
+** `position: sticky` can only stick in one "context".
+Either it sticks to the main viewport scroll, or it sticks to an ancestor that manages overflow.
 ** Overflow `hidden` or `scroll` or `auto` sticks element in that context, not in the broader page context. *Check ancestors for this styling as well*
 
 .Helper to detect ancestors that break `position: sticky` by some overflow styling
 [%collapsible]
 ====
-[source, javascript]
+[source,javascript]
 ----
 // Replace this with a relevant selector.
 const selector = '.the-fixed-child';
@@ -341,7 +395,7 @@ findCulprits(document.querySelector(selector));
 * Thin gap above my sticky header
 ** Issue in Chrome due to rounding issues
 +
-[source, css]
+[source,css]
 ----
 header {
   position: sticky;
@@ -350,13 +404,14 @@ header {
 ----
 
 ==== Hidden Content
+
 * `visibility: hidden` can be selectively undone by children.
 ** All children take the space they need, but only selected ones are visible in the browser.
 
 .React snipped to show hidden a11y elements when necessary (alternative to `aria-label`)
 [%collapsible]
 ====
-[source, javascript]
+[source,javascript]
 ----
 import React from 'reactjs';
 const hiddenStyles = {
@@ -404,3 +459,187 @@ const VisuallyHidden = ({ children, ...delegated }) => {
 export default VisuallyHidden;
 ----
 ====
+
+== Modern Component Architecture
+
+=== Ways of styling applications
+
+There are multiple ways of adding CSS to an application:
+
+==== Vanilla CSS
+
+.Pros
+* No tooling means less complexity, no runtime performance costs
+* CSS Custom Properties make certain tooling features redundant
+
+.Cons
+* Global and unscoped
+* No vendor prefixes added
+[#js-in-css]
+* (_Can't share data between js and css_ 🤔)
++
+.Caveat
+[%collapsible]
+====
+Having a separation between application logic and styles in mind, passing data between js and css can lead to moving parts of the displaying logic into styled components rather than applying different styled components for different use cases.
+Although this has no impact on the processed styles, the complexity and readability of the mixture between data and CSS might increase tremendously.
+====
+
+==== Sass / Less
+
+.Pros
+* Powerful tools like for-loops, mixins, and nesting
+* High developer satisfaction compared with vanilla CSS
+
+.Cons
+* Requires a build step
+* Remains global by nature, and isn't scoped to specific components
+* Everything happens at build time
+
+==== CSS Modules
+
+.Pros
+* Solves scoping and specificity
+* Feels like writing straight-up CSS
+* Offers a composes feature, to extend existing CSS classes
+
+.Cons
+* Doesn't really offer any modern convenience features, like auto prefixing (post processors needed to fix this)
+* (_Hard to share data between CSS and JS_ - <<js-in-css, see Vanilla CSS cons>>)
+
+==== Single-file components
+
+.Pros
+* Less jumping between files
+
+.Cons
+* Blows up files
+* No file-based separation of styles & logic
+
+==== Styled components
+
+.Pros
+* Solves scoping and specificity
+* Offers good solutions for animations and global styles
+* Extremely high developer satisfaction
+* Best-in-class performance
+
+.Cons
+* Primarily a React tool
+* Obfuscates the underlying markup tags, which can make it harder to get a sense of the HTML semantics at a glance
+
+==== Tailwind (Utility first frameworks)
+
+.Pros
+* Solves scoping and specificity
+* Encourages good habits when it comes to following a design system
+* Can be faster to write
+* Not React-specific (React based alternative: https://github.com/ben-rogerson/twin.macro[Twin])
+* Highly used in the last few years
+
+.Cons
+* Relatively steep learning curve, compared to other tools
+* Adds a lot of "bulk" to your markup
+
+=== Styled Components - In Depth
+
+* Sass-like preprocessor *stylis* adds vendor prefixes behind the scenes.
+* Creates unique hash for each styled component -> no css class collisions
+* https://www.joshwcomeau.com/react/demystifying-styled-components/[Demistifying Styled Components]
+
+TIP: Nested CSS (`&`) might come to https://drafts.csswg.org/css-nesting-1/[Vanilla CSS]
+
+* https://necolas.github.io/react-native-web/benchmarks/[Styling Variants Benchmarks]
+* *Each added prop carries a significant and exponential cost in terms of complexity*
+* Use compositions for variants that feel like not being generic ones
+* Define contextual styles by "reaching out" to the sourrounding context
++
+[%collapsible]
+====
+[source,typescript jsx]
+----
+const ButtonBase = styled.button`
+  border-radius: 2px;
+
+  ${ButtonGroup} & {
+    border-radius: 0px;
+  }
+`;
+----
+
+_Contextual styles are defined next to the element to be styled (ButtonBase), rather than polluting the styled of the context (i.e., ButtonGroup)_
+====
+* When extending JSX-Components with a styled component, `className` has to be passed as a prop to the JSX-Component in order to apply the generated css class to its root-element
+
+WARNING:  Only provide "core" options as props for styled components.
+Too much options increase complexity dramatically.
+
+.How to decide about "core" options?
+****
+If the Button component starts to feel too overwhelming, with too many options, consider extracting a couple composed variants to lighten the mental load.
+****
+
+== Flexbox
+
+https://flexboxfroggy.com/[Flexbox Frog Game]
+
+=== Basic Behaviour
+
+* primary & cross axis
+** justify-content styles primary axis
+** align-items styles secondary axis
+* width/height are more like hypothetical rules rather than strict styling
+* Setting `width` in a flex row (or `height` in a flex column) sets the hypothetical size.
+It isn't a guarantee, it's a suggestion
+* `flex-basis` has the same effect as `width` in a flex row (height in a column).
+You can use them interchangeably, *but `flex-basis` will win if there's a conflict*
+* `flex: 1` will assign `flex-grow: 1`, but it will also set `flex-basis: 0%`.
+It won't affect the default value for `flex-shrink`, which is 1
+
+[NOTE]
+====
+`flex: shrink` can't shrink an item below its minimum content size.
+If all the items are below their minimum content size, this property has no effect
+
+To avoid issues between `flex` and `width` it is recommended to use the shorthand for flex in order to set the flex-basis explicitly:
+
+.flex shorthand
+[source,css]
+----
+.item {
+/* grow | shrink | basis */
+  flex: 1 1 200px;
+}
+----
+====
+
+[TIP]
+====
+Since flex-basis is a synonym for width in a flex row, we're effectively shrinking each child to have a “hypothetical width” of 0px, and then distributing all of the space between each child
+
+.`flex-basis:0` causes growth to distribute all space evenly on elements (based on their ratio)
+image::flex-distributions.jpeg[align=center,width=450]
+====
+
+* In a flex row, `flex-basis` works just like `width`, and it also respects the constraints set by `min-width` and `max-width`
+* `flex-basis` helps to define the element-width base on which growing/shrinking the element should take place
++
+.Example
+ flex-basis: 250px -> Assume the element had a width of 250px by default. Resizing logic is based on this width.
+Combining elements flex-basis to a certain screen width can trigger resized effects as desired.
+
+=== Item vs. content
+
+|===
+|Item |Content
+
+|Single element within flexbox container
+|Group of items of a flexbox container
+|===
+
+=== Flexbox and z-index
+
+Flexbox algorithm also supports z-index.
+If our element is being laid out with Flexbox, it uses z-index as if it was rendered with positioned layout.
+
+The same thing is true for CSS Grid; a child in Grid layout can use z-index without setting `position: relative`.
