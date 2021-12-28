@@ -335,7 +335,7 @@ findCulprits(document.querySelector(selector));
 
 ==== Overflow
 
-WARNING: Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+WARNING: Scrollbars can look different on macOS based on having a wired mouse connected or not
 
 When we set either overflow-x or overflow-y, we turn the selected element into a scroll container.
 Children of a scroll container are essentially locked inside that box.
@@ -643,3 +643,59 @@ Flexbox algorithm also supports z-index.
 If our element is being laid out with Flexbox, it uses z-index as if it was rendered with positioned layout.
 
 The same thing is true for CSS Grid; a child in Grid layout can use z-index without setting `position: relative`.
+
+== Responsive and Behavioural CSS
+* On iOS, all browsers are secretly Safari
++
+[%collapsible]
+====
+Google Chrome on iOS uses a WebView that defers all page-rendering to iOS Safari. In other words, iOS Chrome isn't actually a discrete browser; it's more like a Chrome-scented skin for Safari.
+
+This policy does have one upside: we don't have to test our products on multiple browsers on iOS.
+====
+
+* *Adaptive design*: Serve _different HTML_ based on device types
+* *Responsive design*: Serve _one HTML_ displayed differently based on device types
+
+=== Mobile Quirks
+==== Pixel Ratio
+.window.devicePixelRatio
+This number is the ratio between the physical LED pixels on the device, and the "theoretical" pixels we use in CSS. Mapping a software pixel to multiple hardware pixels happens “under the hood”.
+
+.Ratio of 3: 10px are 30px on the device; 1px takes 3x3 pixels
+image::pixel-ratio.png[width=200, align=center]
+
+==== The meta tag
+[source, html]
+----
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
+----
+* width=device-width: Tells mobile devices not to scale in order to see all content rather than using the device width as a viewport width
+
+==== Mobile Testing
+https://www.browserstack.com[Browserstack] (won't reflect latency as real world devices)
+
+https://ngrok.com/[ngrok]: Accessing localhost remotely on mobile devices. Creates a random URL that can be accessed from other devices and forwards to localhost:xxxx
+
+==== Remote Debugging
+https://apps.apple.com/us/app/inspect-browser/id1203594958#?platform=iphone[Inspect Browser]: iOS Browser with dev-tools
+
+=== Interaction Media Queries
+* Starting in 2019, links/buttons will always trigger a click event on tap, no matter what the hover state is
+
+[source, css]
+----
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    text-decoration: underline;
+  }
+}
+----
+`hover` is the ability for a device to move the cursor without also triggering a click/tap on the element underneath; a mouse can do this, but your finger or a stylus can't. +
+`pointer` refers to the level of control the user has over the position of the cursor.
+
+.Hover and pointer states for input devices. A "fine" pointer like a mouse or trackpad means that the user can be very precise with their clicks. Using our fingers on a touchscreen, though, is "coarse": we can't be anywhere near as precise.
+image::hover-pointer.png[width=500, align=center]

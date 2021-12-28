@@ -505,6 +505,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_flexbox_and_z_index">Flexbox and z-index</a></li>
 </ul>
 </li>
+<li><a href="#_responsive_and_behavioural_css">Responsive and Behavioural CSS</a>
+<ul class="sectlevel2">
+<li><a href="#_mobile_quirks">Mobile Quirks</a>
+<ul class="sectlevel3">
+<li><a href="#_pixel_ratio">Pixel Ratio</a></li>
+<li><a href="#_the_meta_tag">The meta tag</a></li>
+<li><a href="#_mobile_testing">Mobile Testing</a></li>
+<li><a href="#_remote_debugging">Remote Debugging</a></li>
+</ul>
+</li>
+<li><a href="#_interaction_media_queries">Interaction Media Queries</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1061,7 +1074,7 @@ findCulprits(document.querySelector(selector));</code></pre>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+Scrollbars can look different on macOS based on having a wired mouse connected or not
 </td>
 </tr>
 </table>
@@ -1656,10 +1669,117 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_responsive_and_behavioural_css">Responsive and Behavioural CSS</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>On iOS, all browsers are secretly Safari</p>
+<details>
+<summary class="title">Details</summary>
+<div class="content">
+<div class="paragraph">
+<p>Google Chrome on iOS uses a WebView that defers all page-rendering to iOS Safari. In other words, iOS Chrome isn&#8217;t actually a discrete browser; it&#8217;s more like a Chrome-scented skin for Safari.</p>
+</div>
+<div class="paragraph">
+<p>This policy does have one upside: we don&#8217;t have to test our products on multiple browsers on iOS.</p>
+</div>
+</div>
+</details>
+</li>
+<li>
+<p><strong>Adaptive design</strong>: Serve <em>different HTML</em> based on device types</p>
+</li>
+<li>
+<p><strong>Responsive design</strong>: Serve <em>one HTML</em> displayed differently based on device types</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_mobile_quirks">Mobile Quirks</h3>
+<div class="sect3">
+<h4 id="_pixel_ratio">Pixel Ratio</h4>
+<div class="paragraph">
+<div class="title">window.devicePixelRatio</div>
+<p>This number is the ratio between the physical LED pixels on the device, and the "theoretical" pixels we use in CSS. Mapping a software pixel to multiple hardware pixels happens “under the hood”.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/pixel-ratio.png" alt="pixel ratio" width="200">
+</div>
+<div class="title">Figure 2. Ratio of 3: 10px are 30px on the device; 1px takes 3x3 pixels</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_meta_tag">The meta tag</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;meta</span>
+  <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">viewport</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#b48">content</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">width=device-width, initial-scale=1</span><span style="color:#710">&quot;</span></span>
+<span style="color:#070;font-weight:bold">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>width=device-width: Tells mobile devices not to scale in order to see all content rather than using the device width as a viewport width</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mobile_testing">Mobile Testing</h4>
+<div class="paragraph">
+<p><a href="https://www.browserstack.com">Browserstack</a> (won&#8217;t reflect latency as real world devices)</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ngrok.com/">ngrok</a>: Accessing localhost remotely on mobile devices. Creates a random URL that can be accessed from other devices and forwards to localhost:xxxx</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_remote_debugging">Remote Debugging</h4>
+<div class="paragraph">
+<p><a href="https://apps.apple.com/us/app/inspect-browser/id1203594958#?platform=iphone">Inspect Browser</a>: iOS Browser with dev-tools</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaction_media_queries">Interaction Media Queries</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Starting in 2019, links/buttons will always trigger a click event on tap, no matter what the hover state is</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#088;font-weight:bold">@media</span> (<span style="color:#339;font-weight:bold">hover</span>: <span style="color:#F00;background-color:#FAA">h</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">e</span><span style="color:#F00;background-color:#FAA">r</span>) <span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">d</span> (<span style="color:#F00;background-color:#FAA">p</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">i</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">t</span><span style="color:#F00;background-color:#FAA">e</span><span style="color:#F00;background-color:#FAA">r</span>: <span style="color:#F00;background-color:#FAA">f</span><span style="color:#F00;background-color:#FAA">i</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">e</span>) {
+  <span style="color:#070;font-weight:bold">button</span><span style="color:#00C;font-weight:bold">:hover</span> {
+    <span style="color:#606">text-decoration</span>: <span style="color:#088">underline</span>;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>hover</code> is the ability for a device to move the cursor without also triggering a click/tap on the element underneath; a mouse can do this, but your finger or a stylus can&#8217;t.<br>
+<code>pointer</code> refers to the level of control the user has over the position of the cursor.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/hover-pointer.png" alt="hover pointer" width="500">
+</div>
+<div class="title">Figure 3. Hover and pointer states for input devices. A "fine" pointer like a mouse or trackpad means that the user can be very precise with their clicks. Using our fingers on a touchscreen, though, is "coarse": we can&#8217;t be anywhere near as precise.</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-19 21:37:50 +0100
+Last updated 2021-12-28 15:05:13 +0100
 </div>
 </div>
 </body>
