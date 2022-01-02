@@ -515,7 +515,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_remote_debugging">Remote Debugging</a></li>
 </ul>
 </li>
-<li><a href="#_interaction_media_queries">Interaction Media Queries</a></li>
+<li><a href="#interaction-media-queries">Interaction Media Queries</a></li>
+<li><a href="#_breakpoints">Breakpoints</a>
+<ul class="sectlevel3">
+<li><a href="#_defining_breakpoints">Defining breakpoints</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1746,11 +1751,17 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 </div>
 </div>
 <div class="sect2">
-<h3 id="_interaction_media_queries">Interaction Media Queries</h3>
+<h3 id="interaction-media-queries">Interaction Media Queries</h3>
 <div class="ulist">
 <ul>
 <li>
 <p>Starting in 2019, links/buttons will always trigger a click event on tap, no matter what the hover state is</p>
+</li>
+<li>
+<p><code>hover</code> is the ability for a device to move the cursor without also triggering a click/tap on the element underneath; a mouse can do this, but your finger or a stylus can&#8217;t.</p>
+</li>
+<li>
+<p><code>pointer</code> refers to the level of control the user has over the position of the cursor</p>
 </li>
 </ul>
 </div>
@@ -1763,10 +1774,6 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><code>hover</code> is the ability for a device to move the cursor without also triggering a click/tap on the element underneath; a mouse can do this, but your finger or a stylus can&#8217;t.<br>
-<code>pointer</code> refers to the level of control the user has over the position of the cursor.</p>
-</div>
 <div class="imageblock text-center">
 <div class="content">
 <img src="assets/images/hover-pointer.png" alt="hover pointer" width="500">
@@ -1774,12 +1781,114 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 <div class="title">Figure 3. Hover and pointer states for input devices. A "fine" pointer like a mouse or trackpad means that the user can be very precise with their clicks. Using our fingers on a touchscreen, though, is "coarse": we can&#8217;t be anywhere near as precise.</div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_breakpoints">Breakpoints</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>We should put our breakpoints in dead zones, as far away from “real-world” resolutions as possible</p>
+</div>
+</blockquote>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/mobile-breakpoints.png" alt="mobile breakpoints" width="500">
+</div>
+<div class="title">Figure 4. Breakpoints should live between device resolutions</div>
+</div>
+<div class="sect3">
+<h4 id="_defining_breakpoints">Defining breakpoints</h4>
+<div class="paragraph">
+<p>Unfortunately, CSS doesn&#8217;t have any built-in way to manage breakpoints. CSS has media queries, and media queries always take "raw" values (like 550px), not breakpoints.</p>
+</div>
+<div class="paragraph">
+<p>The good news is that just about every CSS preprocessor and framework has a solution for this problem.</p>
+</div>
+<details>
+<summary class="title">Example</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span style="color:#777">// mobile-first</span>
+const BREAKPOINTS = {
+  <span style="color:#606">tabletMin</span>: <span style="color:#00D">550</span>,
+  <span style="color:#606">laptopMin</span>: <span style="color:#00D">1100</span>,
+  <span style="color:#606">desktopMin</span>: <span style="color:#00D">1500</span>
+}
+
+const QUERIES = {
+  <span style="color:#606"><span style="color:#404">'</span><span>tabletAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.tabletMin}px)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>laptopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.laptopMin}px)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>desktopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.desktopMin}px)<span style="color:#F00;background-color:#FAA">`</span>
+}
+
+const Wrapper = styled.div<span style="color:#F00;background-color:#FAA">`</span>
+  padding: <span style="color:#00D">16</span>px;
+  <span style="color:#F00;background-color:#FAA">@</span>media <span style="color:#369;font-weight:bold">$</span>{QUERIES.tabletAndUp} {
+    <span style="color:#606">padding</span>: <span style="color:#00D">32</span>px;
+  }
+<span style="color:#F00;background-color:#FAA">`</span>;</code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To ensure device types for certain stylings, <a href="#interaction-media-queries"><code>hover</code> and <code>pointer</code></a> might be better than screen size based media queries.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>rem</code> instead of <code>px</code> for breakpoints can result in a more appropriate behaviour of the application when in-/decreasing font-sizes in the browser. However, this might be confusing to think of along the way.</p>
+</div>
+<details>
+<summary class="title">Example</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const BREAKPOINTS = {
+  <span style="color:#606">tabletMin</span>: <span style="color:#00D">550</span>,
+  <span style="color:#606">laptopMin</span>: <span style="color:#00D">1100</span>,
+  <span style="color:#606">desktopMin</span>: <span style="color:#00D">1500</span>,
+}
+
+const QUERIES = {
+  <span style="color:#606"><span style="color:#404">'</span><span>tabletAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.tabletMin / <span style="color:#00D">16</span>}rem)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>laptopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.laptopMin / <span style="color:#00D">16</span>}rem)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>desktopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.desktopMin / <span style="color:#00D">16</span>}rem)<span style="color:#F00;background-color:#FAA">`</span>,
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you find that you need to use custom values often, it&#8217;s probably a sign that your breakpoints are at the wrong spots. Well-matched set of breakpoint values should be used 80-90%+ of the time.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-28 15:05:13 +0100
+Last updated 2022-01-02 18:26:40 +0100
 </div>
 </div>
 </body>
