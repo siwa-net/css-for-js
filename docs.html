@@ -521,6 +521,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_defining_breakpoints">Defining breakpoints</a></li>
 </ul>
 </li>
+<li><a href="#_css_variables">CSS Variables</a>
+<ul class="sectlevel3">
+<li><a href="#_reactivity_of_css_variables">Reactivity of CSS Variables</a></li>
+<li><a href="#_using_the_calc_function">Using the calc function</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1883,12 +1889,113 @@ If you find that you need to use custom values often, it&#8217;s probably a sign
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_css_variables">CSS Variables</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+CSS variables are inherited by ancestors not globally accessible.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">To avoid inheritance use: <code>@property: --my-var {…}</code> (limited browser support):</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#088;font-weight:bold">@property</span> <span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-text-color</span> {
+  <span style="color:#606">syntax</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&lt;color&gt;</span><span style="color:#710">'</span></span>;
+  <span style="color:#606">inherits</span>: <span style="color:#088">false</span>;
+  <span style="color:#606">initial-value</span>: <span style="color:#088">black</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Most of the time CSS variables are defined on the root element which is an alias for <code>html</code></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#00C;font-weight:bold">:root</span> {
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-color-primary</span>: <span style="color:#088">red</span>;
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-color-secondary</span>: <span style="color:#088">green</span>;
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-color-tertiary</span>: <span style="color:#088">blue</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">CSS Variables are composable:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"> <span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-color-primary</span>: <span style="color:#0A0">hsl(</span>
+    <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-pink-hue</span>)
+    <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-intense</span>)
+  );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Default value for <code>var</code> as second argument:</div>
+<p><code>var(--inner-spacing, 16px);</code></p>
+</div>
+<div class="sect3">
+<h4 id="_reactivity_of_css_variables">Reactivity of CSS Variables</h4>
+<div class="listingblock">
+<div class="title">CSS variables are reactive, i.e they are calculated when they are use not when thy are defined:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">button.style.setProperty(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">--my-var</span><span style="color:#710">'</span></span>, fontSize);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">CSS variables can be changed based on media queries to deal with responsive designs<br></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#777">/* only devices with coarse input device, e.g. fingertip */</span>
+<span style="color:#088;font-weight:bold">@media</span> (<span style="color:#339;font-weight:bold">pointer</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span><span style="color:#F00;background-color:#FAA">s</span><span style="color:#F00;background-color:#FAA">e</span>) {
+    <span style="color:#070;font-weight:bold">html</span> {
+      <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-min-tap-height</span>: <span style="color:#60E">44px</span>;
+    }
+  }
+
+<span style="color:#070;font-weight:bold">input</span> {
+    <span style="color:#606">min-height</span>: <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-min-tap-height</span>, <span style="color:#60E">32px</span>);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_calc_function">Using the calc function</h4>
+<div class="listingblock">
+<div class="title">calc allows to mix units</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.something</span> {
+  <span style="color:#606">width</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">c</span>(<span style="color:#60E">50%</span> + <span style="color:#60E">32px</span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">calc allows to be combined with css variables</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">article</span> {
+  <span style="color:#606">padding</span>: <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-spacing</span>);
+  <span style="color:#606">border-radius</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">c</span>(<span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-spacing</span>) / <span style="color:#60E">2</span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">calc can convert units</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">h2</span> {
+  <span style="color:#777">/* same as 1.5rem */</span>
+  <span style="color:#606">font-size</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">c</span>(<span style="color:#60E">24</span> / <span style="color:#60E">16</span> <span style="color:#F00;background-color:#FAA">*</span> <span style="color:#60E">1</span><span style="color:#088">rem</span>);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-01-02 18:26:40 +0100
+Last updated 2022-01-06 13:29:26 +0100
 </div>
 </div>
 </body>

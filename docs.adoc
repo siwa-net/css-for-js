@@ -765,3 +765,87 @@ const QUERIES = {
 =====
 ====
 WARNING: If you find that you need to use custom values often, it's probably a sign that your breakpoints are at the wrong spots. Well-matched set of breakpoint values should be used 80-90%+ of the time.
+
+=== CSS Variables
+NOTE: CSS variables are inherited by ancestors not globally accessible.
+
+.To avoid inheritance use: `@property: --my-var {…}` (limited browser support):
+[source, css]
+----
+@property --text-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: black;
+}
+----
+
+.Most of the time CSS variables are defined on the root element which is an alias for `html`
+[source, css]
+----
+:root {
+  --color-primary: red;
+  --color-secondary: green;
+  --color-tertiary: blue;
+}
+----
+
+.CSS Variables are composable:
+[source, css]
+----
+ --color-primary: hsl(
+    var(--pink-hue)
+    var(--intense)
+  );
+----
+
+.Default value for `var` as second argument:
+`var(--inner-spacing, 16px);`
+
+==== Reactivity of CSS Variables
+.CSS variables are reactive, i.e they are calculated when they are use not when thy are defined:
+[source, javascript]
+----
+button.style.setProperty('--my-var', fontSize);
+----
+
+.CSS variables can be changed based on media queries to deal with responsive designs +
+[source, css]
+----
+/* only devices with coarse input device, e.g. fingertip */
+@media (pointer: coarse) {
+    html {
+      --min-tap-height: 44px;
+    }
+  }
+
+input {
+    min-height: var(--min-tap-height, 32px);
+}
+----
+
+==== Using the calc function
+.calc allows to mix units
+[source, css]
+----
+.something {
+  width: calc(50% + 32px);
+}
+----
+
+.calc allows to be combined with css variables
+[source, css]
+----
+article {
+  padding: var(--spacing);
+  border-radius: calc(var(--spacing) / 2);
+}
+----
+
+.calc can convert units
+[source, css]
+----
+h2 {
+  /* same as 1.5rem */
+  font-size: calc(24 / 16 * 1rem);
+}
+----
