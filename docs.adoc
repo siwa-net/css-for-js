@@ -849,3 +849,76 @@ h2 {
   font-size: calc(24 / 16 * 1rem);
 }
 ----
+
+==== Viewport Units
+* `vh` describes the largest possible height (e.g. iOS bottom navigation is ignored)
+* `vw` describes the largest possible width (e.g. scrollbars cause horizontal overflow)
+* `vmin` refers to the shorter dimension
+* `vmax` refers to the longer dimension
+
+.Working with scrollbar width
+[source, javascript]
+----
+const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+document.documentElement.style.setProperty(
+  '--scrollbar-width',
+  scrollbarWidth + 'px'
+);
+----
+
+==== clamp
+* Works a bit like the trio of `min-width, width, and max-width`, but it combines it into a single property value
+* As `clamp` is a value and not a property, it can be used so set any min/max units (e.g. paddings)
+
+NOTE: `clamp` does behave different to min/max-width when it comes to boundaries. min/max-values of `clamp` will never overflow the width of its parent element (if defined).
+
+.Using `min/max`
+[source, css]
+----
+img {
+    padding: min(32px, 5vw) /* works as Math.min */
+    margin: max(32px, 5vw) /* works as Math.max */
+}
+----
+
+==== Finding overflowing elements
+.Reveal elements that overflow the viewport and cause horizontal scroll bars
+[source, css]
+----
+*  {
+outline: 1px solid /* takes up no space compared to borders */
+}
+----
+
+==== Responsive Typography
+* All browsers have a default font size of 16px
+
+[TIP]
+====
+iOS zooms in for all input elements that have a smaller font-size than 16px
+
+.Setting font-size for elements to avoid zooming
+[source, css]
+----
+input, select, textarea {
+  font-size: 1rem; /* in case browser font-size >= 16px */
+}
+----
+====
+
+.Settings typography size based on viewport.
+By mixing a viewport unit with a relative unit, we give the user control over the font size once more, allowing them to crank it up
+[source, css]
+----
+h1 {
+  font-size: clamp(1.5rem, 4vw + 1rem, 3rem);
+  margin-bottom: 0.5em;
+  /*
+    HACK: Add this declaration if you're using Safari to see the text scale
+    when resizing:
+
+    min-height: 0vh;
+  */
+}
+----
