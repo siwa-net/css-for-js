@@ -335,7 +335,7 @@ findCulprits(document.querySelector(selector));
 
 ==== Overflow
 
-WARNING: Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+WARNING: Scrollbars can look different on macOS based on having a wired mouse connected or not
 
 When we set either overflow-x or overflow-y, we turn the selected element into a scroll container.
 Children of a scroll container are essentially locked inside that box.
@@ -643,3 +643,282 @@ Flexbox algorithm also supports z-index.
 If our element is being laid out with Flexbox, it uses z-index as if it was rendered with positioned layout.
 
 The same thing is true for CSS Grid; a child in Grid layout can use z-index without setting `position: relative`.
+
+== Responsive and Behavioural CSS
+* On iOS, all browsers are secretly Safari
++
+[%collapsible]
+====
+Google Chrome on iOS uses a WebView that defers all page-rendering to iOS Safari. In other words, iOS Chrome isn't actually a discrete browser; it's more like a Chrome-scented skin for Safari.
+
+This policy does have one upside: we don't have to test our products on multiple browsers on iOS.
+====
+
+* *Adaptive design*: Serve _different HTML_ based on device types
+* *Responsive design*: Serve _one HTML_ displayed differently based on device types
+
+=== Mobile Quirks
+==== Pixel Ratio
+.window.devicePixelRatio
+This number is the ratio between the physical LED pixels on the device, and the "theoretical" pixels we use in CSS. Mapping a software pixel to multiple hardware pixels happens “under the hood”.
+
+.Ratio of 3: 10px are 30px on the device; 1px takes 3x3 pixels
+image::pixel-ratio.png[width=200, align=center]
+
+==== The meta tag
+[source, html]
+----
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
+----
+* width=device-width: Tells mobile devices not to scale in order to see all content rather than using the device width as a viewport width
+
+==== Mobile Testing
+https://www.browserstack.com[Browserstack] (won't reflect latency as real world devices)
+
+https://ngrok.com/[ngrok]: Accessing localhost remotely on mobile devices. Creates a random URL that can be accessed from other devices and forwards to localhost:xxxx
+
+==== Remote Debugging
+https://apps.apple.com/us/app/inspect-browser/id1203594958#?platform=iphone[Inspect Browser]: iOS Browser with dev-tools
+
+[#interaction-media-queries]
+=== Interaction Media Queries
+* Starting in 2019, links/buttons will always trigger a click event on tap, no matter what the hover state is
+* `hover` is the ability for a device to move the cursor without also triggering a click/tap on the element underneath; a mouse can do this, but your finger or a stylus can't.
+* `pointer` refers to the level of control the user has over the position of the cursor
+
+[source, css]
+----
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    text-decoration: underline;
+  }
+}
+----
+
+.Hover and pointer states for input devices. A "fine" pointer like a mouse or trackpad means that the user can be very precise with their clicks. Using our fingers on a touchscreen, though, is "coarse": we can't be anywhere near as precise.
+image::hover-pointer.png[width=500, align=center]
+
+=== Breakpoints
+> We should put our breakpoints in dead zones, as far away from “real-world” resolutions as possible
+
+.Breakpoints should live between device resolutions
+image::mobile-breakpoints.png[align=center, width=500]
+
+==== Defining breakpoints
+Unfortunately, CSS doesn't have any built-in way to manage breakpoints. CSS has media queries, and media queries always take "raw" values (like 550px), not breakpoints.
+
+The good news is that just about every CSS preprocessor and framework has a solution for this problem.
+
+.Example
+[%collapsible]
+=====
+[source, javascript]
+----
+// mobile-first
+const BREAKPOINTS = {
+  tabletMin: 550,
+  laptopMin: 1100,
+  desktopMin: 1500
+}
+
+const QUERIES = {
+  'tabletAndUp': `(min-width: ${BREAKPOINTS.tabletMin}px)`,
+  'laptopAndUp': `(min-width: ${BREAKPOINTS.laptopMin}px)`,
+  'desktopAndUp': `(min-width: ${BREAKPOINTS.desktopMin}px)`
+}
+
+const Wrapper = styled.div`
+  padding: 16px;
+  @media ${QUERIES.tabletAndUp} {
+    padding: 32px;
+  }
+`;
+----
+=====
+
+[TIP]
+====
+To ensure device types for certain stylings, <<interaction-media-queries,`hover` and `pointer`>> might be better than screen size based media queries.
+
+Using `rem` instead of `px` for breakpoints can result in a more appropriate behaviour of the application when in-/decreasing font-sizes in the browser. However, this might be confusing to think of along the way.
+
+.Example
+[%collapsible]
+=====
+[source, javascript]
+----
+const BREAKPOINTS = {
+  tabletMin: 550,
+  laptopMin: 1100,
+  desktopMin: 1500,
+}
+
+const QUERIES = {
+  'tabletAndUp': `(min-width: ${BREAKPOINTS.tabletMin / 16}rem)`,
+  'laptopAndUp': `(min-width: ${BREAKPOINTS.laptopMin / 16}rem)`,
+  'desktopAndUp': `(min-width: ${BREAKPOINTS.desktopMin / 16}rem)`,
+}
+----
+=====
+====
+WARNING: If you find that you need to use custom values often, it's probably a sign that your breakpoints are at the wrong spots. Well-matched set of breakpoint values should be used 80-90%+ of the time.
+
+=== CSS Variables
+NOTE: CSS variables are inherited by ancestors not globally accessible.
+
+.To avoid inheritance use: `@property: --my-var {…}` (limited browser support):
+[source, css]
+----
+@property --text-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: black;
+}
+----
+
+.Most of the time CSS variables are defined on the root element which is an alias for `html`
+[source, css]
+----
+:root {
+  --color-primary: red;
+  --color-secondary: green;
+  --color-tertiary: blue;
+}
+----
+
+.CSS Variables are composable:
+[source, css]
+----
+ --color-primary: hsl(
+    var(--pink-hue)
+    var(--intense)
+  );
+----
+
+.Default value for `var` as second argument:
+`var(--inner-spacing, 16px);`
+
+==== Reactivity of CSS Variables
+.CSS variables are reactive, i.e they are calculated when they are use not when thy are defined:
+[source, javascript]
+----
+button.style.setProperty('--my-var', fontSize);
+----
+
+.CSS variables can be changed based on media queries to deal with responsive designs +
+[source, css]
+----
+/* only devices with coarse input device, e.g. fingertip */
+@media (pointer: coarse) {
+    html {
+      --min-tap-height: 44px;
+    }
+  }
+
+input {
+    min-height: var(--min-tap-height, 32px);
+}
+----
+
+==== Using the calc function
+.calc allows to mix units
+[source, css]
+----
+.something {
+  width: calc(50% + 32px);
+}
+----
+
+.calc allows to be combined with css variables
+[source, css]
+----
+article {
+  padding: var(--spacing);
+  border-radius: calc(var(--spacing) / 2);
+}
+----
+
+.calc can convert units
+[source, css]
+----
+h2 {
+  /* same as 1.5rem */
+  font-size: calc(24 / 16 * 1rem);
+}
+----
+
+==== Viewport Units
+* `vh` describes the largest possible height (e.g. iOS bottom navigation is ignored)
+* `vw` describes the largest possible width (e.g. scrollbars cause horizontal overflow)
+* `vmin` refers to the shorter dimension
+* `vmax` refers to the longer dimension
+
+.Working with scrollbar width
+[source, javascript]
+----
+const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+document.documentElement.style.setProperty(
+  '--scrollbar-width',
+  scrollbarWidth + 'px'
+);
+----
+
+==== clamp
+* Works a bit like the trio of `min-width, width, and max-width`, but it combines it into a single property value
+* As `clamp` is a value and not a property, it can be used so set any min/max units (e.g. paddings)
+
+NOTE: `clamp` does behave different to min/max-width when it comes to boundaries. min/max-values of `clamp` will never overflow the width of its parent element (if defined).
+
+.Using `min/max`
+[source, css]
+----
+img {
+    padding: min(32px, 5vw) /* works as Math.min */
+    margin: max(32px, 5vw) /* works as Math.max */
+}
+----
+
+==== Finding overflowing elements
+.Reveal elements that overflow the viewport and cause horizontal scroll bars
+[source, css]
+----
+*  {
+outline: 1px solid /* takes up no space compared to borders */
+}
+----
+
+==== Responsive Typography
+* All browsers have a default font size of 16px
+
+[TIP]
+====
+iOS zooms in for all input elements that have a smaller font-size than 16px
+
+.Setting font-size for elements to avoid zooming
+[source, css]
+----
+input, select, textarea {
+  font-size: 1rem; /* in case browser font-size >= 16px */
+}
+----
+====
+
+.Settings typography size based on viewport.
+By mixing a viewport unit with a relative unit, we give the user control over the font size once more, allowing them to crank it up
+[source, css]
+----
+h1 {
+  font-size: clamp(1.5rem, 4vw + 1rem, 3rem);
+  margin-bottom: 0.5em;
+  /*
+    HACK: Add this declaration if you're using Safari to see the text scale
+    when resizing:
+
+    min-height: 0vh;
+  */
+}
+----

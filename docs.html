@@ -505,6 +505,34 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_flexbox_and_z_index">Flexbox and z-index</a></li>
 </ul>
 </li>
+<li><a href="#_responsive_and_behavioural_css">Responsive and Behavioural CSS</a>
+<ul class="sectlevel2">
+<li><a href="#_mobile_quirks">Mobile Quirks</a>
+<ul class="sectlevel3">
+<li><a href="#_pixel_ratio">Pixel Ratio</a></li>
+<li><a href="#_the_meta_tag">The meta tag</a></li>
+<li><a href="#_mobile_testing">Mobile Testing</a></li>
+<li><a href="#_remote_debugging">Remote Debugging</a></li>
+</ul>
+</li>
+<li><a href="#interaction-media-queries">Interaction Media Queries</a></li>
+<li><a href="#_breakpoints">Breakpoints</a>
+<ul class="sectlevel3">
+<li><a href="#_defining_breakpoints">Defining breakpoints</a></li>
+</ul>
+</li>
+<li><a href="#_css_variables">CSS Variables</a>
+<ul class="sectlevel3">
+<li><a href="#_reactivity_of_css_variables">Reactivity of CSS Variables</a></li>
+<li><a href="#_using_the_calc_function">Using the calc function</a></li>
+<li><a href="#_viewport_units">Viewport Units</a></li>
+<li><a href="#_clamp">clamp</a></li>
+<li><a href="#_finding_overflowing_elements">Finding overflowing elements</a></li>
+<li><a href="#_responsive_typography">Responsive Typography</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1061,7 +1089,7 @@ findCulprits(document.querySelector(selector));</code></pre>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Scrollbars can look diferent on macOS based on having a wired mouse connected or not
+Scrollbars can look different on macOS based on having a wired mouse connected or not
 </td>
 </tr>
 </table>
@@ -1656,10 +1684,447 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_responsive_and_behavioural_css">Responsive and Behavioural CSS</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>On iOS, all browsers are secretly Safari</p>
+<details>
+<summary class="title">Details</summary>
+<div class="content">
+<div class="paragraph">
+<p>Google Chrome on iOS uses a WebView that defers all page-rendering to iOS Safari. In other words, iOS Chrome isn&#8217;t actually a discrete browser; it&#8217;s more like a Chrome-scented skin for Safari.</p>
+</div>
+<div class="paragraph">
+<p>This policy does have one upside: we don&#8217;t have to test our products on multiple browsers on iOS.</p>
+</div>
+</div>
+</details>
+</li>
+<li>
+<p><strong>Adaptive design</strong>: Serve <em>different HTML</em> based on device types</p>
+</li>
+<li>
+<p><strong>Responsive design</strong>: Serve <em>one HTML</em> displayed differently based on device types</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_mobile_quirks">Mobile Quirks</h3>
+<div class="sect3">
+<h4 id="_pixel_ratio">Pixel Ratio</h4>
+<div class="paragraph">
+<div class="title">window.devicePixelRatio</div>
+<p>This number is the ratio between the physical LED pixels on the device, and the "theoretical" pixels we use in CSS. Mapping a software pixel to multiple hardware pixels happens “under the hood”.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/pixel-ratio.png" alt="pixel ratio" width="200">
+</div>
+<div class="title">Figure 2. Ratio of 3: 10px are 30px on the device; 1px takes 3x3 pixels</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_meta_tag">The meta tag</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;meta</span>
+  <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">viewport</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#b48">content</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">width=device-width, initial-scale=1</span><span style="color:#710">&quot;</span></span>
+<span style="color:#070;font-weight:bold">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>width=device-width: Tells mobile devices not to scale in order to see all content rather than using the device width as a viewport width</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mobile_testing">Mobile Testing</h4>
+<div class="paragraph">
+<p><a href="https://www.browserstack.com">Browserstack</a> (won&#8217;t reflect latency as real world devices)</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ngrok.com/">ngrok</a>: Accessing localhost remotely on mobile devices. Creates a random URL that can be accessed from other devices and forwards to localhost:xxxx</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_remote_debugging">Remote Debugging</h4>
+<div class="paragraph">
+<p><a href="https://apps.apple.com/us/app/inspect-browser/id1203594958#?platform=iphone">Inspect Browser</a>: iOS Browser with dev-tools</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="interaction-media-queries">Interaction Media Queries</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Starting in 2019, links/buttons will always trigger a click event on tap, no matter what the hover state is</p>
+</li>
+<li>
+<p><code>hover</code> is the ability for a device to move the cursor without also triggering a click/tap on the element underneath; a mouse can do this, but your finger or a stylus can&#8217;t.</p>
+</li>
+<li>
+<p><code>pointer</code> refers to the level of control the user has over the position of the cursor</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#088;font-weight:bold">@media</span> (<span style="color:#339;font-weight:bold">hover</span>: <span style="color:#F00;background-color:#FAA">h</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">e</span><span style="color:#F00;background-color:#FAA">r</span>) <span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">d</span> (<span style="color:#F00;background-color:#FAA">p</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">i</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">t</span><span style="color:#F00;background-color:#FAA">e</span><span style="color:#F00;background-color:#FAA">r</span>: <span style="color:#F00;background-color:#FAA">f</span><span style="color:#F00;background-color:#FAA">i</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">e</span>) {
+  <span style="color:#070;font-weight:bold">button</span><span style="color:#00C;font-weight:bold">:hover</span> {
+    <span style="color:#606">text-decoration</span>: <span style="color:#088">underline</span>;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/hover-pointer.png" alt="hover pointer" width="500">
+</div>
+<div class="title">Figure 3. Hover and pointer states for input devices. A "fine" pointer like a mouse or trackpad means that the user can be very precise with their clicks. Using our fingers on a touchscreen, though, is "coarse": we can&#8217;t be anywhere near as precise.</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_breakpoints">Breakpoints</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>We should put our breakpoints in dead zones, as far away from “real-world” resolutions as possible</p>
+</div>
+</blockquote>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/images/mobile-breakpoints.png" alt="mobile breakpoints" width="500">
+</div>
+<div class="title">Figure 4. Breakpoints should live between device resolutions</div>
+</div>
+<div class="sect3">
+<h4 id="_defining_breakpoints">Defining breakpoints</h4>
+<div class="paragraph">
+<p>Unfortunately, CSS doesn&#8217;t have any built-in way to manage breakpoints. CSS has media queries, and media queries always take "raw" values (like 550px), not breakpoints.</p>
+</div>
+<div class="paragraph">
+<p>The good news is that just about every CSS preprocessor and framework has a solution for this problem.</p>
+</div>
+<details>
+<summary class="title">Example</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span style="color:#777">// mobile-first</span>
+const BREAKPOINTS = {
+  <span style="color:#606">tabletMin</span>: <span style="color:#00D">550</span>,
+  <span style="color:#606">laptopMin</span>: <span style="color:#00D">1100</span>,
+  <span style="color:#606">desktopMin</span>: <span style="color:#00D">1500</span>
+}
+
+const QUERIES = {
+  <span style="color:#606"><span style="color:#404">'</span><span>tabletAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.tabletMin}px)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>laptopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.laptopMin}px)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>desktopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.desktopMin}px)<span style="color:#F00;background-color:#FAA">`</span>
+}
+
+const Wrapper = styled.div<span style="color:#F00;background-color:#FAA">`</span>
+  padding: <span style="color:#00D">16</span>px;
+  <span style="color:#F00;background-color:#FAA">@</span>media <span style="color:#369;font-weight:bold">$</span>{QUERIES.tabletAndUp} {
+    <span style="color:#606">padding</span>: <span style="color:#00D">32</span>px;
+  }
+<span style="color:#F00;background-color:#FAA">`</span>;</code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To ensure device types for certain stylings, <a href="#interaction-media-queries"><code>hover</code> and <code>pointer</code></a> might be better than screen size based media queries.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>rem</code> instead of <code>px</code> for breakpoints can result in a more appropriate behaviour of the application when in-/decreasing font-sizes in the browser. However, this might be confusing to think of along the way.</p>
+</div>
+<details>
+<summary class="title">Example</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const BREAKPOINTS = {
+  <span style="color:#606">tabletMin</span>: <span style="color:#00D">550</span>,
+  <span style="color:#606">laptopMin</span>: <span style="color:#00D">1100</span>,
+  <span style="color:#606">desktopMin</span>: <span style="color:#00D">1500</span>,
+}
+
+const QUERIES = {
+  <span style="color:#606"><span style="color:#404">'</span><span>tabletAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.tabletMin / <span style="color:#00D">16</span>}rem)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>laptopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.laptopMin / <span style="color:#00D">16</span>}rem)<span style="color:#F00;background-color:#FAA">`</span>,
+  <span style="color:#606"><span style="color:#404">'</span><span>desktopAndUp</span><span style="color:#404">'</span></span>: <span style="color:#F00;background-color:#FAA">`</span>(min-width: <span style="color:#369;font-weight:bold">$</span>{BREAKPOINTS.desktopMin / <span style="color:#00D">16</span>}rem)<span style="color:#F00;background-color:#FAA">`</span>,
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you find that you need to use custom values often, it&#8217;s probably a sign that your breakpoints are at the wrong spots. Well-matched set of breakpoint values should be used 80-90%+ of the time.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_css_variables">CSS Variables</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+CSS variables are inherited by ancestors not globally accessible.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">To avoid inheritance use: <code>@property: --my-var {…}</code> (limited browser support):</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#088;font-weight:bold">@property</span> <span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-text-color</span> {
+  <span style="color:#606">syntax</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&lt;color&gt;</span><span style="color:#710">'</span></span>;
+  <span style="color:#606">inherits</span>: <span style="color:#088">false</span>;
+  <span style="color:#606">initial-value</span>: <span style="color:#088">black</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Most of the time CSS variables are defined on the root element which is an alias for <code>html</code></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#00C;font-weight:bold">:root</span> {
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-color-primary</span>: <span style="color:#088">red</span>;
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-color-secondary</span>: <span style="color:#088">green</span>;
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-color-tertiary</span>: <span style="color:#088">blue</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">CSS Variables are composable:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"> <span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-color-primary</span>: <span style="color:#0A0">hsl(</span>
+    <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-pink-hue</span>)
+    <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#070;font-weight:bold">-intense</span>)
+  );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Default value for <code>var</code> as second argument:</div>
+<p><code>var(--inner-spacing, 16px);</code></p>
+</div>
+<div class="sect3">
+<h4 id="_reactivity_of_css_variables">Reactivity of CSS Variables</h4>
+<div class="listingblock">
+<div class="title">CSS variables are reactive, i.e they are calculated when they are use not when thy are defined:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">button.style.setProperty(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">--my-var</span><span style="color:#710">'</span></span>, fontSize);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">CSS variables can be changed based on media queries to deal with responsive designs<br></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#777">/* only devices with coarse input device, e.g. fingertip */</span>
+<span style="color:#088;font-weight:bold">@media</span> (<span style="color:#339;font-weight:bold">pointer</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span><span style="color:#F00;background-color:#FAA">s</span><span style="color:#F00;background-color:#FAA">e</span>) {
+    <span style="color:#070;font-weight:bold">html</span> {
+      <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-min-tap-height</span>: <span style="color:#60E">44px</span>;
+    }
+  }
+
+<span style="color:#070;font-weight:bold">input</span> {
+    <span style="color:#606">min-height</span>: <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-min-tap-height</span>, <span style="color:#60E">32px</span>);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_calc_function">Using the calc function</h4>
+<div class="listingblock">
+<div class="title">calc allows to mix units</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.something</span> {
+  <span style="color:#606">width</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">c</span>(<span style="color:#60E">50%</span> + <span style="color:#60E">32px</span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">calc allows to be combined with css variables</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">article</span> {
+  <span style="color:#606">padding</span>: <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-spacing</span>);
+  <span style="color:#606">border-radius</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">c</span>(<span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-spacing</span>) / <span style="color:#60E">2</span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">calc can convert units</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">h2</span> {
+  <span style="color:#777">/* same as 1.5rem */</span>
+  <span style="color:#606">font-size</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">c</span>(<span style="color:#60E">24</span> / <span style="color:#60E">16</span> <span style="color:#F00;background-color:#FAA">*</span> <span style="color:#60E">1</span><span style="color:#088">rem</span>);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_viewport_units">Viewport Units</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>vh</code> describes the largest possible height (e.g. iOS bottom navigation is ignored)</p>
+</li>
+<li>
+<p><code>vw</code> describes the largest possible width (e.g. scrollbars cause horizontal overflow)</p>
+</li>
+<li>
+<p><code>vmin</code> refers to the shorter dimension</p>
+</li>
+<li>
+<p><code>vmax</code> refers to the longer dimension</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Working with scrollbar width</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+document.documentElement.style.setProperty(
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">--scrollbar-width</span><span style="color:#710">'</span></span>,
+  scrollbarWidth + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">px</span><span style="color:#710">'</span></span>
+);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_clamp">clamp</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Works a bit like the trio of <code>min-width, width, and max-width</code>, but it combines it into a single property value</p>
+</li>
+<li>
+<p>As <code>clamp</code> is a value and not a property, it can be used so set any min/max units (e.g. paddings)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>clamp</code> does behave different to min/max-width when it comes to boundaries. min/max-values of <code>clamp</code> will never overflow the width of its parent element (if defined).
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Using <code>min/max</code></div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">img</span> {
+    <span style="color:#606">padding</span>: <span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">i</span><span style="color:#F00;background-color:#FAA">n</span>(<span style="color:#60E">32px</span>, <span style="color:#60E">5</span><span style="color:#088">vw</span>) <span style="color:#777">/* works as Math.min */</span>
+    <span style="color:#088">margin</span>: <span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">x</span>(<span style="color:#60E">32px</span>, <span style="color:#60E">5</span><span style="color:#088">vw</span>) <span style="color:#777">/* works as Math.max */</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_finding_overflowing_elements">Finding overflowing elements</h4>
+<div class="listingblock">
+<div class="title">Reveal elements that overflow the viewport and cause horizontal scroll bars</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">*</span>  {
+<span style="color:#606">outline</span>: <span style="color:#60E">1px</span> <span style="color:#088">solid</span> <span style="color:#777">/* takes up no space compared to borders */</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_responsive_typography">Responsive Typography</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>All browsers have a default font size of 16px</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>iOS zooms in for all input elements that have a smaller font-size than 16px</p>
+</div>
+<div class="listingblock">
+<div class="title">Setting font-size for elements to avoid zooming</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">input</span>, <span style="color:#070;font-weight:bold">select</span>, <span style="color:#070;font-weight:bold">textarea</span> {
+  <span style="color:#606">font-size</span>: <span style="color:#60E">1</span><span style="color:#088">rem</span>; <span style="color:#777">/* in case browser font-size &gt;= 16px */</span>
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<div class="title">Settings typography size based on viewport.</div>
+<p>By mixing a viewport unit with a relative unit, we give the user control over the font size once more, allowing them to crank it up</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">h1</span> {
+  <span style="color:#606">font-size</span>: <span style="color:#F00;background-color:#FAA">c</span><span style="color:#F00;background-color:#FAA">l</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">p</span>(<span style="color:#60E">1.5</span><span style="color:#088">rem</span>, <span style="color:#60E">4</span><span style="color:#088">vw</span> + <span style="color:#60E">1</span><span style="color:#088">rem</span>, <span style="color:#60E">3</span><span style="color:#088">rem</span>);
+  <span style="color:#606">margin-bottom</span>: <span style="color:#60E">0.5em</span>;
+  <span style="color:#777">/*
+    HACK: Add this declaration if you're using Safari to see the text scale
+    when resizing:
+
+    min-height: 0vh;
+  */</span>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-19 21:37:50 +0100
+Last updated 2022-01-09 13:46:25 +0100
 </div>
 </div>
 </body>
