@@ -50,7 +50,7 @@ html, body {
 ----
 ====
 
-==== Scroll Effects
+=== Scroll Effects
 
 Applying scroll effect only to one part of the application by defining the scroll container height by sibling: (See https://courses.joshwcomeau.com/css-for-js/04-flexbox/11-flex-interactions#combining-layout-modes[Module 4])
 
@@ -75,6 +75,19 @@ video::https://courses.joshwcomeau.com/course-materials/flex-absolute-child.mp4[
     position: sticky;
     top: 0;
 }
+----
+
+== Others
+* `@supports` queries help with applying styles only to supported browsers
++
+[source, css]
+----
+@supports (aspect-ratio: 1 / 1) {
+    img {
+      height: revert;
+      aspect-ratio: 1 / 1;
+    }
+  }
 ----
 
 == Fundamentals Recap
@@ -621,6 +634,7 @@ Since flex-basis is a synonym for width in a flex row, we're effectively shrinki
 image::flex-distributions.jpeg[align=center,width=450]
 ====
 
+
 * In a flex row, `flex-basis` works just like `width`, and it also respects the constraints set by `min-width` and `max-width`
 * `flex-basis` helps to define the element-width base on which growing/shrinking the element should take place
 +
@@ -643,6 +657,39 @@ Flexbox algorithm also supports z-index.
 If our element is being laid out with Flexbox, it uses z-index as if it was rendered with positioned layout.
 
 The same thing is true for CSS Grid; a child in Grid layout can use z-index without setting `position: relative`.
+
+=== Center child with content around
+
+[.float-group]
+--
+image:centered-mobile-nav.png[width=250, role="left"]
+Sometimes there is content that should be centered in the container with other elements before/after.
+
+One solution would be to solve this with having the surrounding elements positioned absolute. Flexbox can help here with the use of `flex: 1` to let surrounding elements grow evenly to the remaining space:
+
+[source, html]
+----
+<div id="nav-container">
+    <div class="filler" />
+    <nav></nav>
+    <footer class="filler" />
+</div>
+----
+
+[source, css]
+----
+.nav-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.filler {
+    flex: 1;
+}
+----
+.Explanation
+`.filler` on the surrounding elements of the centered content will take the share the remaining space evenly due to `flex: 1`. The remaining space is always `container-height - centered-element-height` which will result in a centered element.
+--
 
 == Responsive and Behavioural CSS
 * On iOS, all browsers are secretly Safari
@@ -922,3 +969,143 @@ h1 {
   */
 }
 ----
+
+== Typography
+* Kerning algorithms take care about spacing between characters to make text looking more "natural" (Algorithms differ across browsers)
+* bitmap (images blurry on scale) vs. vectors (commonly used)
+* `\&nbsp;` helps to keep text together that should not be separated by line breaks
+* `hyphens: auto` only works if the lang attribute is set on the <html> tag (and it mainly only works in English
+* https://www.cssfontstack.com/[CSS Font Stack] (A complete collection of web safe CSS font stacks)
+
+[TIP]
+====
+`-webkit-font-smoothing` only works on MacOS, and only in Chrome/Safari/Edge (not Firefox)
+====
+
+.Limit maximum size for lines + ellipsis
+[source, css]
+----
+p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin-bottom: 1em;
+  }
+----
+
+.Multicolumn Layout
+[source, javascript]
+----
+.column-wrapper {
+  columns: 2;
+  column-gap: 16px;
+}
+
+p {
+  break-inside: avoid; /* optional: do not break between columns */
+}
+----
+
+.https://systemfontstack.com/[SystemFont Stack] (Fallbacks on the nicest default option for systems)
+[source, css]
+----
+html {
+  --font-sans-serif:
+    -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+  --font-serif:
+    Iowan Old Style, Apple Garamond, Baskerville, Times New Roman,
+    Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol;
+  /* Set a global default */
+  font-family: var(--font-sans-serif);
+}
+
+/* Apply different fonts as needed */
+p {
+  font-family: var(--font-serif);
+}
+----
+
+=== Web Fonts
+* https://fontsource.org/[Fontsource]: Easy-to-use method to install and use self-hosted web fonts
+* Google fonts are easy to add, but can be slow (even with CDN) and are missing quite a few fonts
+* `.otf` & `.ttf` are inteded to be used on computers not on the web, https://www.fontsquirrel.com/tools/webfont-generator[Webfont Generator] creates proper web fonts out of these formats
+
+.Modern custom font setup with fallback for IE
+[source, css]
+----
+@font-face {
+  font-family: 'Wotfard';
+  src:
+    url('/fonts/wotfard-regular-italic.woff2') format('woff2'),
+    url('/fonts/wotfard-regular-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+----
+
+=== Steps of font loading/rendering
+* *The block period* +
+During this time, the text will be painted in an invisible ink, so that no text is visible. It'll render the font ASAP if it becomes available during this period.
+* *The swap period* +
+During this time, a fallback font is rendered (the first available font in the font stack). If the web font becomes available during this period, it gets swapped in immediately.
+* *The failure period* +
+If the font isn't loaded during the block or swap periods, it stops trying, and will keep showing the fallback font no matter what happens with the web font.
+
+
+==== Improve font loading experience
+`font-display: fallback`: Features a very-short block period (about 100ms), and a moderate swap period (about 3s)
+
+On speedy connections, it's likely that the font can be downloaded within the block period, preventing an uncomfortable flash between font families.
+On very slow or intermittent connections, the fallback font is used forever, preventing a random flash between fonts seconds/minutes after the page has loaded.
+
+TIP: https://meowni.ca/font-style-matcher/[Matching fonts for swap]
+
+==== Variable Fonts
+.A font has parameters that can be tweaked to control the rendered output. The most obvious example is font weight.
+[source, html]
+----
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+----
+
+== Icons & Images
+* https://svg2jsx.com/[SVG to JSX converter]
+* It is not always useful to have images `alt` attribute to describe what the images show, on interactive images (such as links on images) it might be benificial to describe what the images _does_.
+* For aesthetic purposes using background images instead might to the trick.
+
+NOTE: Images are inline elements and therefore have spacings and such by default
+
+.Make images/videos fit container boundaries
+[source, css]
+----
+img,
+video {
+  object-fit: fill; /* contain | cover | none  */
+  object-position: 0% 0%; /* shift image */
+}
+----
+
+=== Images and Flexbox
+As images have a quite unique way of behaviour, styling images with flexbox can get tricky when it comes to dynamic dimensions. One solution to solve moste of the problems would be the following:
+
+.Styling image containers rather than images themselves
+[source, css]
+----
+.img-container {
+  flex: 1; /* have all images of the same size  */
+}
+
+img {
+  width: 100%; /* Rely on the container width */
+}
+----
+
+=== Background-images & Others
+
+* `aspect-ratio: n / m` helps to keep the ratio of images when scaling, but also any other element
+* using `<picture />` instead of `<img />` allows to use multiple sources for `srcset` (fallbacks, …)
+* `.avif` creates dramatically smaller images (limited browser support)
+* different background-images for different devices can be achieved with `min-resolution media queries` (`-webkit-min-device-pixel-ratio` on Safari) - should be used in addition to `background-size` to get the required effect
+* `background-repeat: round` will prevent background images from being cut off (by scaling them down) -  `space` can be used for the same effect but with having spaces between background images rather then down-scaled versions
