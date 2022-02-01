@@ -451,13 +451,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_tips_tricks">Tips &amp; Tricks</a>
 <ul class="sectlevel2">
 <li><a href="#_debugging">Debugging</a></li>
-<li><a href="#_mobile_styles">Mobile Styles</a>
-<ul class="sectlevel3">
+<li><a href="#_mobile_styles">Mobile Styles</a></li>
 <li><a href="#_scroll_effects">Scroll Effects</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li><a href="#_others">Others</a></li>
 <li><a href="#_fundamentals_recap">Fundamentals Recap</a>
 <ul class="sectlevel2">
 <li><a href="#_accessibility_a11y">Accessibility (a11y)</a></li>
@@ -503,6 +501,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_basic_behaviour">Basic Behaviour</a></li>
 <li><a href="#_item_vs_content">Item vs. content</a></li>
 <li><a href="#_flexbox_and_z_index">Flexbox and z-index</a></li>
+<li><a href="#_center_child_with_content_around">Center child with content around</a></li>
 </ul>
 </li>
 <li><a href="#_responsive_and_behavioural_css">Responsive and Behavioural CSS</a>
@@ -531,6 +530,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_responsive_typography">Responsive Typography</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#_typography">Typography</a>
+<ul class="sectlevel2">
+<li><a href="#_web_fonts">Web Fonts</a></li>
+<li><a href="#_steps_of_font_loadingrendering">Steps of font loading/rendering</a>
+<ul class="sectlevel3">
+<li><a href="#_improve_font_loading_experience">Improve font loading experience</a></li>
+<li><a href="#_variable_fonts">Variable Fonts</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_icons_images">Icons &amp; Images</a>
+<ul class="sectlevel2">
+<li><a href="#_images_and_flexbox">Images and Flexbox</a></li>
+<li><a href="#_background_images_others">Background-images &amp; Others</a></li>
 </ul>
 </li>
 </ul>
@@ -591,8 +607,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_scroll_effects">Scroll Effects</h4>
+</div>
+<div class="sect2">
+<h3 id="_scroll_effects">Scroll Effects</h3>
 <div class="paragraph">
 <p>Applying scroll effect only to one part of the application by defining the scroll container height by sibling: (See <a href="https://courses.joshwcomeau.com/css-for-js/04-flexbox/11-flex-interactions#combining-layout-modes">Module 4</a>)</p>
 </div>
@@ -625,6 +642,27 @@ Your browser does not support the video tag.
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_others">Others</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>@supports</code> queries help with applying styles only to supported browsers</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#088;font-weight:bold">@supports</span> (<span style="color:#070;font-weight:bold">aspect-ratio</span>: <span style="color:#60E">1</span> / <span style="color:#60E">1</span>) {
+    <span style="color:#606">img</span> {
+      <span style="color:#606">height</span>: <span style="color:#088">revert</span>;
+      <span style="color:#606">aspect-ratio</span>: <span style="color:#60E">1</span> / <span style="color:#60E">1</span>;
+    }
+  }</code></pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1682,6 +1720,45 @@ If our element is being laid out with Flexbox, it uses z-index as if it was rend
 <p>The same thing is true for CSS Grid; a child in Grid layout can use z-index without setting <code>position: relative</code>.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_center_child_with_content_around">Center child with content around</h3>
+<div class="openblock float-group">
+<div class="content">
+<div class="paragraph">
+<p><span class="image left"><img src="assets/images/centered-mobile-nav.png" alt="centered mobile nav" width="250"></span>
+Sometimes there is content that should be centered in the container with other elements before/after.</p>
+</div>
+<div class="paragraph">
+<p>One solution would be to solve this with having the surrounding elements positioned absolute. Flexbox can help here with the use of <code>flex: 1</code> to let surrounding elements grow evenly to the remaining space:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;div</span> <span style="color:#b48">id</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nav-container</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;div</span> <span style="color:#b48">class</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">filler</span><span style="color:#710">&quot;</span></span> <span style="color:#070;font-weight:bold">/&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;nav&gt;</span><span style="color:#070;font-weight:bold">&lt;/nav&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;footer</span> <span style="color:#b48">class</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">filler</span><span style="color:#710">&quot;</span></span> <span style="color:#070;font-weight:bold">/&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/div&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.nav-container</span> {
+    <span style="color:#606">display</span>: <span style="color:#088">flex</span>;
+    <span style="color:#606">flex-direction</span>: <span style="color:#088">column</span>;
+}
+
+<span style="color:#B06;font-weight:bold">.filler</span> {
+    <span style="color:#606">flex</span>: <span style="color:#60E">1</span>;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Explanation</div>
+<p><code>.filler</code> on the surrounding elements of the centered content will take the share the remaining space evenly due to <code>flex: 1</code>. The remaining space is always <code>container-height - centered-element-height</code> which will result in a centered element.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2121,10 +2198,253 @@ document.documentElement.style.setProperty(
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_typography">Typography</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Kerning algorithms take care about spacing between characters to make text looking more "natural" (Algorithms differ across browsers)</p>
+</li>
+<li>
+<p>bitmap (images blurry on scale) vs. vectors (commonly used)</p>
+</li>
+<li>
+<p><code>&amp;nbsp;</code> helps to keep text together that should not be separated by line breaks</p>
+</li>
+<li>
+<p><code>hyphens: auto</code> only works if the lang attribute is set on the &lt;html&gt; tag (and it mainly only works in English</p>
+</li>
+<li>
+<p><a href="https://www.cssfontstack.com/">CSS Font Stack</a> (A complete collection of web safe CSS font stacks)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>-webkit-font-smoothing</code> only works on MacOS, and only in Chrome/Safari/Edge (not Firefox)</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Limit maximum size for lines + ellipsis</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">p</span> {
+    <span style="color:#606">display</span>: <span style="color:#088">-webkit-box</span>;
+    <span style="color:#606">-webkit-box-orient</span>: <span style="color:#088">vertical</span>;
+    <span style="color:#606">-webkit-line-clamp</span>: <span style="color:#60E">3</span>;
+    <span style="color:#606">overflow</span>: <span style="color:#088">hidden</span>;
+    <span style="color:#606">margin-bottom</span>: <span style="color:#60E">1em</span>;
+  }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Multicolumn Layout</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">.column-wrapper {
+  <span style="color:#606">columns</span>: <span style="color:#00D">2</span>;
+  column-gap: <span style="color:#00D">16</span>px;
+}
+
+p {
+  <span style="color:#080;font-weight:bold">break</span>-inside: avoid; <span style="color:#777">/* optional: do not break between columns */</span>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://systemfontstack.com/">SystemFont Stack</a> (Fallbacks on the nicest default option for systems)</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">html</span> {
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-font-sans-serif</span>:
+    <span style="color:#088">-apple-system</span>, <span style="color:#088">BlinkMacSystemFont</span>, <span style="color:#088">avenir</span> <span style="color:#088">next</span>, <span style="color:#088">avenir</span>, <span style="color:#088">segoe</span> <span style="color:#088">ui</span>,
+    <span style="color:#088">helvetica</span> <span style="color:#088">neue</span>, <span style="color:#088">helvetica</span>, <span style="color:#088">Ubuntu</span>, <span style="color:#088">roboto</span>, <span style="color:#088">noto</span>, <span style="color:#088">arial</span>, <span style="color:#088">sans-serif</span>;
+  <span style="color:#F00;background-color:#FAA">-</span><span style="color:#606">-font-serif</span>:
+    <span style="color:#088">Iowan</span> <span style="color:#088">Old</span> <span style="color:#088">Style</span>, <span style="color:#088">Apple</span> <span style="color:#088">Garamond</span>, <span style="color:#088">Baskerville</span>, <span style="color:#088">Times</span> <span style="color:#088">New</span> <span style="color:#088">Roman</span>,
+    <span style="color:#088">Droid</span> <span style="color:#088">Serif</span>, <span style="color:#088">Times</span>, <span style="color:#088">Source</span> <span style="color:#088">Serif</span> <span style="color:#088">Pro</span>, <span style="color:#088">serif</span>, <span style="color:#088">Apple</span> <span style="color:#088">Color</span> <span style="color:#088">Emoji</span>,
+    <span style="color:#088">Segoe</span> <span style="color:#088">UI</span> <span style="color:#088">Emoji</span>, <span style="color:#088">Segoe</span> <span style="color:#088">UI</span> <span style="color:#088">Symbol</span>;
+  <span style="color:#777">/* Set a global default */</span>
+  <span style="color:#606">font-family</span>: <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-font-sans-serif</span>);
+}
+
+<span style="color:#777">/* Apply different fonts as needed */</span>
+<span style="color:#070;font-weight:bold">p</span> {
+  <span style="color:#606">font-family</span>: <span style="color:#F00;background-color:#FAA">v</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">r</span>(<span style="color:#F00;background-color:#FAA">-</span><span style="color:#088">-font-serif</span>);
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_web_fonts">Web Fonts</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://fontsource.org/">Fontsource</a>: Easy-to-use method to install and use self-hosted web fonts</p>
+</li>
+<li>
+<p>Google fonts are easy to add, but can be slow (even with CDN) and are missing quite a few fonts</p>
+</li>
+<li>
+<p><code>.otf</code> &amp; <code>.ttf</code> are inteded to be used on computers not on the web, <a href="https://www.fontsquirrel.com/tools/webfont-generator">Webfont Generator</a> creates proper web fonts out of these formats</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Modern custom font setup with fallback for IE</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#088;font-weight:bold">@font-face</span> {
+  <span style="color:#606">font-family</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Wotfard</span><span style="color:#710">'</span></span>;
+  <span style="color:#606">src</span>:
+    <span style="color:#06B;font-weight:bold"><span style="color:#059">url(</span><span style="color:#037">'/fonts/wotfard-regular-italic.woff2'</span><span style="color:#059">)</span></span> <span style="color:#F00;background-color:#FAA">f</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">r</span><span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">t</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">woff2</span><span style="color:#710">'</span></span>),
+    <span style="color:#06B;font-weight:bold"><span style="color:#059">url(</span><span style="color:#037">'/fonts/wotfard-regular-italic.woff'</span><span style="color:#059">)</span></span> <span style="color:#F00;background-color:#FAA">f</span><span style="color:#F00;background-color:#FAA">o</span><span style="color:#F00;background-color:#FAA">r</span><span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">t</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">woff</span><span style="color:#710">'</span></span>);
+  <span style="color:#606">font-weight</span>: <span style="color:#60E">400</span>;
+  <span style="color:#606">font-style</span>: <span style="color:#088">normal</span>;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_steps_of_font_loadingrendering">Steps of font loading/rendering</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>The block period</strong><br>
+During this time, the text will be painted in an invisible ink, so that no text is visible. It&#8217;ll render the font ASAP if it becomes available during this period.</p>
+</li>
+<li>
+<p><strong>The swap period</strong><br>
+During this time, a fallback font is rendered (the first available font in the font stack). If the web font becomes available during this period, it gets swapped in immediately.</p>
+</li>
+<li>
+<p><strong>The failure period</strong><br>
+If the font isn&#8217;t loaded during the block or swap periods, it stops trying, and will keep showing the fallback font no matter what happens with the web font.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_improve_font_loading_experience">Improve font loading experience</h4>
+<div class="paragraph">
+<p><code>font-display: fallback</code>: Features a very-short block period (about 100ms), and a moderate swap period (about 3s)</p>
+</div>
+<div class="paragraph">
+<p>On speedy connections, it&#8217;s likely that the font can be downloaded within the block period, preventing an uncomfortable flash between font families.
+On very slow or intermittent connections, the fallback font is used forever, preventing a random flash between fonts seconds/minutes after the page has loaded.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<a href="https://meowni.ca/font-style-matcher/">Matching fonts for swap</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_variable_fonts">Variable Fonts</h4>
+<div class="listingblock">
+<div class="title">A font has parameters that can be tweaked to control the rendered output. The most obvious example is font weight.</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;link</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900</span><span style="color:#D20">&amp;</span><span style="color:#D20">display=swap</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">rel</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">stylesheet</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_icons_images">Icons &amp; Images</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://svg2jsx.com/">SVG to JSX converter</a></p>
+</li>
+<li>
+<p>It is not always useful to have images <code>alt</code> attribute to describe what the images show, on interactive images (such as links on images) it might be benificial to describe what the images <em>does</em>.</p>
+</li>
+<li>
+<p>For aesthetic purposes using background images instead might to the trick.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Images are inline elements and therefore have spacings and such by default
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Make images/videos fit container boundaries</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#070;font-weight:bold">img</span>,
+<span style="color:#070;font-weight:bold">video</span> {
+  <span style="color:#606">object-fit</span>: <span style="color:#088">fill</span>; <span style="color:#777">/* contain | cover | none  */</span>
+  <span style="color:#606">object-position</span>: <span style="color:#60E">0%</span> <span style="color:#60E">0%</span>; <span style="color:#777">/* shift image */</span>
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_images_and_flexbox">Images and Flexbox</h3>
+<div class="paragraph">
+<p>As images have a quite unique way of behaviour, styling images with flexbox can get tricky when it comes to dynamic dimensions. One solution to solve moste of the problems would be the following:</p>
+</div>
+<div class="listingblock">
+<div class="title">Styling image containers rather than images themselves</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.img-container</span> {
+  <span style="color:#606">flex</span>: <span style="color:#60E">1</span>; <span style="color:#777">/* have all images of the same size  */</span>
+}
+
+<span style="color:#070;font-weight:bold">img</span> {
+  <span style="color:#606">width</span>: <span style="color:#60E">100%</span>; <span style="color:#777">/* Rely on the container width */</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_background_images_others">Background-images &amp; Others</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>aspect-ratio: n / m</code> helps to keep the ratio of images when scaling, but also any other element</p>
+</li>
+<li>
+<p>using <code>&lt;picture /&gt;</code> instead of <code>&lt;img /&gt;</code> allows to use multiple sources for <code>srcset</code> (fallbacks, …)</p>
+</li>
+<li>
+<p><code>.avif</code> creates dramatically smaller images (limited browser support)</p>
+</li>
+<li>
+<p>different background-images for different devices can be achieved with <code>min-resolution media queries</code> (<code>-webkit-min-device-pixel-ratio</code> on Safari) - should be used in addition to <code>background-size</code> to get the required effect</p>
+</li>
+<li>
+<p><code>background-repeat: round</code> will prevent background images from being cut off (by scaling them down) -  <code>space</code> can be used for the same effect but with having spaces between background images rather then down-scaled versions</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-01-09 13:46:25 +0100
+Last updated 2022-02-01 15:45:57 +0100
 </div>
 </div>
 </body>
