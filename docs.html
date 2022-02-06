@@ -471,6 +471,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_dimensions">Dimensions</a></li>
 <li><a href="#_positioning">Positioning</a>
 <ul class="sectlevel3">
+<li><a href="#_width_algorithms">Width Algorithms</a></li>
 <li><a href="#_absolute_positioning">Absolute positioning</a></li>
 <li><a href="#_stacking_content">Stacking content</a></li>
 <li><a href="#_fixed_positioning">Fixed positioning</a></li>
@@ -549,6 +550,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_background_images_others">Background-images &amp; Others</a></li>
 </ul>
 </li>
+<li><a href="#_css_grid">CSS Grid</a>
+<ul class="sectlevel2">
+<li><a href="#_browser_support">Browser Support</a></li>
+<li><a href="#_grid_flow_construction">Grid Flow &amp; Construction</a>
+<ul class="sectlevel3">
+<li><a href="#_alignment">Alignment</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -588,8 +599,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>Apllying full screen height with <code>100vh</code> causes unexpected behavour on mobile devices, as loading bars and scroll bars count into the <code>vh</code> as well.</p>
+<div id="full-vertical-space" class="paragraph">
+<p>Applying full screen height with <code>100vh</code> causes unexpected behavour on mobile devices, as loading bars and scroll bars count into the <code>vh</code> as well.</p>
 </div>
 <div class="listingblock">
 <div class="title">Solution:</div>
@@ -671,6 +682,9 @@ Your browser does not support the video tag.
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_accessibility_a11y">Accessibility (<a href="https://a11y.coffee/">a11y</a>)</h3>
+<div class="paragraph">
+<p><a href="https://chrome.google.com/webstore/detail/wave-evaluation-tool/jbbplnpkjmmeebjpijfedlgcdilocofh">A11y chrome extension</a></p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -968,6 +982,22 @@ The displacement is purely cosmetic.</p>
 <p>Can be applied to block and inline elements</p>
 </li>
 </ul>
+</div>
+<div class="sect3">
+<h4 id="_width_algorithms">Width Algorithms</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>width: min-content</code>: Content becomes as small as it can, based on the child contents</p>
+</li>
+<li>
+<p><code>width: max-content</code>: Smallest value that contains the content, <em>without breaking it up</em></p>
+</li>
+<li>
+<p><code>width: fit-content</code>: Content width is based on the size of the children. If that width can fit within the parent container, it behaves just like <code>max-content</code>, not adding any line-breaks</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_absolute_positioning">Absolute positioning</h4>
@@ -2441,10 +2471,108 @@ Images are inline elements and therefore have spacings and such by default
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_css_grid">CSS Grid</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In contrast to <em>flexbox</em>, css grid is focused on distributing content across two axes rather than one. In addition, css grid has no such thing as primary and secondary axis</p>
+</div>
+<div class="paragraph">
+<p>In contrast to <em>table layout</em>, css grid has no DOM elements defining the layout - pure CSS.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_browser_support">Browser Support</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Supported by <a href="https://caniuse.com/css-grid">~96%</a> of distributed browsers</p>
+</li>
+<li>
+<p>IE 10 and 11 support CSS Grid - but an older version of the specification</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grid_flow_construction">Grid Flow &amp; Construction</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>By default, <code>display: grid</code> creates 1 new row for each element</p>
+</li>
+<li>
+<p><code>grid-auto-flow: row|column</code> changes directions</p>
+</li>
+<li>
+<p>Unlike in Flexbox, values aren&#8217;t "suggestions", they&#8217;re hard limits</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Content which is too large will overflow by default</p>
+</li>
+<li>
+<p><code>fr</code> unit solves this taking care of the dynamic column sizes (similar to <code>flex-grow</code>) and distributing over the available space</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>grid-template-rows | grid-template-columns</code> allow to define the grid pattern</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Additional children are "squeezed" into the layout</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In order to create a grid over the whole vertical space, the <a href="#full-vertical-space">min-height trick</a> needs to be applied</p>
+</li>
+<li>
+<p><code>gap</code> can be distinguished between rows &amp; columns by adding a second value (rows-gap | columns-gap)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Shorthand for repeating elements</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.calendar</span> {
+  <span style="color:#606">grid-template-columns</span>: <span style="color:#60E">250px</span> <span style="color:#F00;background-color:#FAA">r</span><span style="color:#F00;background-color:#FAA">e</span><span style="color:#F00;background-color:#FAA">p</span><span style="color:#F00;background-color:#FAA">e</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">t</span>(<span style="color:#60E">5</span>, <span style="color:#60E">1</span><span style="color:#088">fr</span>);
+}</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_alignment">Alignment</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>justify-content: center</code> looks at the contents of each row, and figure out which child is widest in order to center columns</p>
+</li>
+<li>
+<p><code>justify-content</code> applies to the grid structure, changing the columns. <code>justify-items</code> applies to the child elements, without affecting the shape of the grid. (analog for <code>align-(content|items)</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-02-01 15:45:57 +0100
+Last updated 2022-02-06 13:45:36 +0100
 </div>
 </div>
 </body>

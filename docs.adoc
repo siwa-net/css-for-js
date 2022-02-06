@@ -35,7 +35,8 @@ https://github.com/andreadev-it/stacking-contexts-inspector[Stacking dev-tools]
 
 [TIP]
 ====
-Apllying full screen height with `100vh` causes unexpected behavour on mobile devices, as loading bars and scroll bars count into the `vh` as well.
+[#full-vertical-space]
+Applying full screen height with `100vh` causes unexpected behavour on mobile devices, as loading bars and scroll bars count into the `vh` as well.
 
 .Solution:
 [source,css]
@@ -93,6 +94,7 @@ video::https://courses.joshwcomeau.com/course-materials/flex-absolute-child.mp4[
 == Fundamentals Recap
 
 === Accessibility (https://a11y.coffee/[a11y])
+https://chrome.google.com/webstore/detail/wave-evaluation-tool/jbbplnpkjmmeebjpijfedlgcdilocofh[A11y chrome extension]
 
 [TIP]
 =====
@@ -247,6 +249,11 @@ The displacement is purely cosmetic.
 +
 image::position-comparison.png[align=center]
 * Can be applied to block and inline elements
+
+==== Width Algorithms
+* `width: min-content`: Content becomes as small as it can, based on the child contents
+* `width: max-content`: Smallest value that contains the content, _without breaking it up_
+* `width: fit-content`: Content width is based on the size of the children. If that width can fit within the parent container, it behaves just like `max-content`, not adding any line-breaks
 
 ==== Absolute positioning
 
@@ -1109,3 +1116,38 @@ img {
 * `.avif` creates dramatically smaller images (limited browser support)
 * different background-images for different devices can be achieved with `min-resolution media queries` (`-webkit-min-device-pixel-ratio` on Safari) - should be used in addition to `background-size` to get the required effect
 * `background-repeat: round` will prevent background images from being cut off (by scaling them down) -  `space` can be used for the same effect but with having spaces between background images rather then down-scaled versions
+
+== CSS Grid
+[NOTE]
+====
+In contrast to _flexbox_, css grid is focused on distributing content across two axes rather than one. In addition, css grid has no such thing as primary and secondary axis
+
+In contrast to _table layout_, css grid has no DOM elements defining the layout - pure CSS.
+====
+
+=== Browser Support
+* Supported by https://caniuse.com/css-grid[~96%] of distributed browsers
+* IE 10 and 11 support CSS Grid - but an older version of the specification
+
+=== Grid Flow & Construction
+* By default, `display: grid` creates 1 new row for each element
+* `grid-auto-flow: row|column` changes directions
+* Unlike in Flexbox, values aren't "suggestions", they're hard limits
+** Content which is too large will overflow by default
+** `fr` unit solves this taking care of the dynamic column sizes (similar to `flex-grow`) and distributing over the available space
+* `grid-template-rows | grid-template-columns` allow to define the grid pattern
+** Additional children are "squeezed" into the layout
+* In order to create a grid over the whole vertical space, the <<full-vertical-space, min-height trick>> needs to be applied
+* `gap` can be distinguished between rows & columns by adding a second value (rows-gap | columns-gap)
+
+.Shorthand for repeating elements
+[source,css]
+----
+.calendar {
+  grid-template-columns: 250px repeat(5, 1fr);
+}
+----
+
+==== Alignment
+* `justify-content: center` looks at the contents of each row, and figure out which child is widest in order to center columns
+* `justify-content` applies to the grid structure, changing the columns. `justify-items` applies to the child elements, without affecting the shape of the grid. (analog for `align-(content|items)`)
