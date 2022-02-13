@@ -1140,6 +1140,15 @@ In contrast to _table layout_, css grid has no DOM elements defining the layout 
 * In order to create a grid over the whole vertical space, the <<full-vertical-space, min-height trick>> needs to be applied
 * `gap` can be distinguished between rows & columns by adding a second value (rows-gap | columns-gap)
 
+.Center elements across both axis
+[source, css]
+----
+.wrapper {
+    display: grid;
+    place-content: center;
+  }
+----
+
 .Shorthand for repeating elements
 [source,css]
 ----
@@ -1151,3 +1160,68 @@ In contrast to _table layout_, css grid has no DOM elements defining the layout 
 ==== Alignment
 * `justify-content: center` looks at the contents of each row, and figure out which child is widest in order to center columns
 * `justify-content` applies to the grid structure, changing the columns. `justify-items` applies to the child elements, without affecting the shape of the grid. (analog for `align-(content|items)`)
+
+==== Areas
+.Grid areas allow to assign elements to certain sections of the layout
+[source,css]
+----
+.wrapper {
+  display: grid;
+  grid-template-areas:
+    'sidebar header'
+    'sidebar main-content';
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 80px 2fr;
+}
+
+aside {
+  grid-area: sidebar;
+}
+header {
+  grid-area: header;
+}
+----
+
+==== Tracks and Lines
+[source, css]
+----
+.box {
+  /* start / end line */
+  grid-column: 3 / 5;
+  /* always span over all rows */
+  grid-row: 1 / -1;
+}
+----
+TIP: -1 on defined tracks will always span to the end not matter how many sections in the track are added
+
+==== Responsive Grid
+[source, css]
+----
+.grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+----
+
+.minmax(150px, 1fr)
+Have each column with equal width but restricted to at least 150px
+
+.repeat(auto-fill, …)
+Have as many columns as possible with the given dimension
+
+NOTE: Figure out how many columns we can fit at the minimum acceptable size, 150px. +
+Scale up each column so that the entire horizontal space is filled.
+
+.Avoid overflow on smaller screen sizes
+[source, css]
+----
+.grid {
+    display: grid;
+    grid-template-columns:
+      repeat(auto-fill, minmax(min(150px, 100%), 1fr));
+  }
+----
+
+=== Subgrids
+Subgrids are currently only supported in https://caniuse.com/?search=subgrid[Firefox] introduced by css grids v2. The first version allows only direct children of grids to participate in the provided grid layout.
