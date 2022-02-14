@@ -561,6 +561,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_subgrids">Subgrids</a></li>
+<li><a href="#_overflow_2">Overflow</a></li>
+<li><a href="#_grid_quirks">Grid Quirks</a></li>
 </ul>
 </li>
 </ul>
@@ -2525,7 +2527,10 @@ Images are inline elements and therefore have spacings and such by default
 <p>Content which is too large will overflow by default</p>
 </li>
 <li>
-<p><code>fr</code> unit solves this taking care of the dynamic column sizes (similar to <code>flex-grow</code>) and distributing over the available space</p>
+<p><code>fr</code> unit solves this taking care of the dynamic column sizes (similar to <code>flex-grow</code>) and distributing over the <strong>available space</strong>.</p>
+</li>
+<li>
+<p>However: <code>fr</code> reacts based on its contents &#8594; large children will cause an overflow</p>
 </li>
 </ul>
 </div>
@@ -2676,12 +2681,61 @@ Scale up each column so that the entire horizontal space is filled.
 <p>Subgrids are currently only supported in <a href="https://caniuse.com/?search=subgrid">Firefox</a> introduced by css grids v2. The first version allows only direct children of grids to participate in the provided grid layout.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_overflow_2">Overflow</h3>
+<div class="paragraph">
+<div class="title">Solution 1: Moving the overflow</div>
+<p>To manage overflowing content, <code>overflow:</code> should be applied directly on the grid cell</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>fr</code> has an exception built-in: if the grid child has <code>overflow: auto</code>, it gives the column permission to shrink below the natural width of that element. But this doesn&#8217;t work recursively.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Solution 2: Setting a minimum width</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="css"><span style="color:#B06;font-weight:bold">.grid</span> {
+    <span style="color:#606">display</span>: <span style="color:#088">grid</span>;
+    <span style="color:#606">gap</span>: <span style="color:#60E">16px</span>;
+    <span style="color:#606">grid-template-columns</span>: <span style="color:#60E">175px</span> <span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">i</span><span style="color:#F00;background-color:#FAA">n</span><span style="color:#F00;background-color:#FAA">m</span><span style="color:#F00;background-color:#FAA">a</span><span style="color:#F00;background-color:#FAA">x</span>(<span style="color:#60E">0</span>, <span style="color:#60E">1</span><span style="color:#088">fr</span>);
+  }</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The explanation here is that the minimum size of an fr unit is auto. Grid then looks at the min-content size of the item. If the item has a size (you’ve given it a width) or has something in it with a size such as an image, the min-content size might be much bigger than the share of available space you think 1fr will give you. It’s easy to think of 1fr as being “one part of the space in the grid container” when it is really one part of the space left over.</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grid_quirks">Grid Quirks</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>grid child can use <code>z-index</code></p>
+</li>
+<li>
+<p><code>fr</code> on rows takes the largest row for n-fr in account to determine how large n-fr should be. Other fr values are adapted accordingly to the calculation what n-fr is</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-02-13 16:49:06 +0100
+Last updated 2022-02-14 10:48:48 +0100
 </div>
 </div>
 </body>

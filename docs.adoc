@@ -1134,7 +1134,8 @@ In contrast to _table layout_, css grid has no DOM elements defining the layout 
 * `grid-auto-flow: row|column` changes directions
 * Unlike in Flexbox, values aren't "suggestions", they're hard limits
 ** Content which is too large will overflow by default
-** `fr` unit solves this taking care of the dynamic column sizes (similar to `flex-grow`) and distributing over the available space
+** `fr` unit solves this taking care of the dynamic column sizes (similar to `flex-grow`) and distributing over the *available space*.
+** However: `fr` reacts based on its contents -> large children will cause an overflow
 * `grid-template-rows | grid-template-columns` allow to define the grid pattern
 ** Additional children are "squeezed" into the layout
 * In order to create a grid over the whole vertical space, the <<full-vertical-space, min-height trick>> needs to be applied
@@ -1225,3 +1226,24 @@ Scale up each column so that the entire horizontal space is filled.
 
 === Subgrids
 Subgrids are currently only supported in https://caniuse.com/?search=subgrid[Firefox] introduced by css grids v2. The first version allows only direct children of grids to participate in the provided grid layout.
+
+=== Overflow
+.Solution 1: Moving the overflow
+To manage overflowing content, `overflow:` should be applied directly on the grid cell
+
+NOTE: `fr` has an exception built-in: if the grid child has `overflow: auto`, it gives the column permission to shrink below the natural width of that element. But this doesn't work recursively.
+
+.Solution 2: Setting a minimum width
+[source, css]
+----
+.grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 175px minmax(0, 1fr);
+  }
+----
+> The explanation here is that the minimum size of an fr unit is auto. Grid then looks at the min-content size of the item. If the item has a size (you’ve given it a width) or has something in it with a size such as an image, the min-content size might be much bigger than the share of available space you think 1fr will give you. It’s easy to think of 1fr as being “one part of the space in the grid container” when it is really one part of the space left over.
+
+=== Grid Quirks
+* grid child can use `z-index`
+* `fr` on rows takes the largest row for n-fr in account to determine how large n-fr should be. Other fr values are adapted accordingly to the calculation what n-fr is
